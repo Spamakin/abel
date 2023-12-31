@@ -1,0 +1,79 @@
+\documentclass{article}
+
+% --- PACKAGES ---
+\input{style}
+
+\title{A Group by Any \newline Other Name}
+
+\begin{document}
+\maketitle
+
+
+Here is some testing of some math using \LaTeX\ and plas\TeX.
+But before we test any math, here is some text.
+One TODO I have is to make the blog sections have wider text.
+The main / front pages are fine as is, but the blog posts should have something different, something wider.
+
+We already know that the following work:
+\begin{itemize}
+\item itemize
+\end{itemize}
+
+\begin{enumerate}
+\item enumerate
+\end{enumerate}
+
+\begin{table}
+  \centering
+  \begin{tabular}{|c|}
+    \hline
+    Tables and Tabular \\
+    \hline
+  \end{tabular}
+  \caption{With Captions!}
+\end{table}
+
+\subsection*{Some Differential Geometry}
+
+Let $D$ be a compact $m$-dimensional oriented domain with boundary $\partial D$, $N$ a manifold, $F\colon \partial D \to N$ a smooth map, and $\omega \in \Omega^{m - 1}(N)$ a closed form.
+Prove that if $F$ can be extended to a smooth map $\tilde{F}\colon D \to N$ then $\int_{\partial D} F^{*}\omega = 0$.
+
+Since $\omega$ is closed, we have that $\text{d} \omega = 0$.
+Then since $F = \tilde{F}\bigm|_{\partial D}$ we have that $\int_{\partial D} F^{*}\omega = \int_{\partial D} \tilde{F}^{*}\omega$.
+Thus we have
+\[
+  \int_{\partial D} F^{*}\omega = \int_{\partial D} \tilde{F}^{*}\omega = \int_{D} \text{d} \left(\tilde{F}^{*}\omega\right) = \int_{D} \tilde{F}^{*}(\text{d} \omega) = \int_{D} \tilde{F}^{*}(0) = 0.
+\]
+
+Show that the bilinear multiplication on any associative algebra over $\mathbb{R}$ satisfies the Jacobi identity.
+
+We will denote $a \circ b$ as $ab$ for all $a, b \in A$.
+A computation yields the desired result.
+\begin{align*}
+  [x, [y, z]] &= [x, yz - zy] \\
+              &= x(yz - zy) - (yz - zy)x \\
+              &= xyz - xzy - yzx + zyx \\
+              &= xyz - yxz - zxy + zyx + yxz - yzx - xzy + zxy \\
+              &= (xy - yx)z - z(xy - yx) + y(xz - zx) - (xz - zx)y \\
+              &= [xy - yx, z] + [y, xz - zx] = [[x, y], z] + [y, [x, z]]
+\end{align*}
+
+\subsection*{Computer Science}
+
+In addition to mathematics, computer science will also be discussed.
+However, the algorithm environment currently does not work.
+So just mathematics and computer science without algorithms will be discussed.
+
+\subsection*{Image Testing}
+
+\begin{center}
+  \begin{tikzcd}[row sep=1cm]
+  	{}   & \ker \pi' = T_mM \times \{0_p\} \ar[d, hookrightarrow] \ar["T_m F_p", dr] &  &  \\
+    \ker \pi = T_\sigma\Sigma \ar[r] \ar[r] \ar[r] \ar[r, hookrightarrow] &
+  	T_m M \times T_p P \ar["\pi", bend right, swap, rr] \ar["\pi'", d]  \ar["T_\sigma F",
+  	r, swap]& T_{F(\sigma)} N \ar["\rho", r, twoheadrightarrow]& \nu_{F(\sigma)} A \\
+     & T_p P &  &
+  \end{tikzcd}
+\end{center}
+
+\end{document}
