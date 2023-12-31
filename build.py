@@ -111,20 +111,20 @@ def clean(root_file, gen_dir):
     print("[A] Cleaned up files")
 
 
-def fix_index(gen_dir):
+def fix_title_front(gen_dir, target_file, title):
     if not os.path.exists(f"{gen_dir}/"):
         raise RuntimeError(f"{gen_dir}/ does not exist. Build main site first")
 
-    with open(f"{gen_dir}/index_fixed.html", "w") as idx_out:
-        with open(f"{gen_dir}/index.html", "r") as idx_in:
+    with open(f"{gen_dir}/{target_file}_fixed.html", "w") as idx_out:
+        with open(f"{gen_dir}/{target_file}.html", "r") as idx_in:
             for line in idx_in:
                 if "<title>" in line:
-                    idx_out.write("<title>commutative.group</title>\n")
+                    idx_out.write(f"<title>{title}</title>\n")
                 else:
                     idx_out.write(line)
-    os.remove(f"{gen_dir}/index.html")
-    shutil.move(f"{gen_dir}/index_fixed.html", f"{gen_dir}/index.html")
-    print("[A] Fixed title of index.html")
+    os.remove(f"{gen_dir}/{target_file}.html")
+    shutil.move(f"{gen_dir}/{target_file}_fixed.html", f"{gen_dir}/{target_file}.html")
+    print(f"[A] Fixed title of {target_file}.html")
 
 def clean_main(gen_dir):
     if not os.path.exists(f"{gen_dir}/"):
@@ -152,7 +152,9 @@ def build_main(root_file, gen_dir):
 
     print("[A] Built Main Site")
 
-    fix_index(gen_dir)
+    fix_title_front(gen_dir, "index", "commutative.group")
+    fix_title_front(gen_dir, "About", "About")
+    fix_title_front(gen_dir, "All-Posts", "All Posts")
 
 
 def main():
