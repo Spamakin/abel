@@ -3,7 +3,7 @@
 import os
 import shutil
 import json
-
+import fitz
 
 def run_plastex(args, target):
     print(f"[A] Running plasTeX with target {target} and the following args:")
@@ -13,6 +13,82 @@ def run_plastex(args, target):
         plastex_args += arg + " "
     cmd = "plastex" + plastex_args + f" -- {target}"
     os.system(cmd)
+
+def gen_algos(root_file, gen_dir, post):
+    if not os.path.exists(f"posts/{post}/algos"):
+        raise RuntimeError(f"algos/ does not exist in posts/{post}, which is impossible.")
+
+    # copy template/algos/style.sty, algo.sty, latexmkrc
+    if not os.path.exists(f"template/algos"):
+        raise RuntimeError(f"algos/ does not exist in template")
+    else:
+        stys = ["algo", "style", "ntabbing"]
+        for sty in stys:
+            if not os.path.exists(f"template/algos/{sty}.sty"):
+                raise RuntimeError(f"{sty}.sty does not exist in template/algos")
+                shutil.copy(f"template/algos/{sty}.sty", f"posts/{post}/algos/{sty}.sty")
+    print(f"[A] Building algorithm pngs for {post}")
+
+
+    # for algo_name.tex in algos/
+    # ends in .tex
+    algos = [algo[:-4] for algo in next(os.walk(f"posts/{post}/algos"))[2] if algo.endswith(".tex")]
+    print("[A] Building the following algorithm pngs:")
+    for algo_name in algos:
+        print(f"    {algo_name}")
+    for algo_name in algos:
+        # TODO: don't change directories
+        os.chdir(f"posts/{post}/algos")
+
+        print(f"[A] Building png for algorithm {post}/algos/{algo_name}.tex")
+
+        # algo_name.tex -> algo_name.pdf
+        # NOTE: --outdir is relative to -cd
+        os.mkdir("temp")
+        print(f"[A] Making temporary directory for algo {algo_name} generation")
+        args = [
+            "-pdf",
+            "-silent",
+            "-outdir=temp/",
+        ]
+        latexmk_args = " "
+        for arg in args:
+            print(f"    {arg}")
+            latexmk_args += arg + " "
+        target = f"{algo_name}.tex"
+        print(f"[A] Running Latexmk with target {target} and the following args:")
+        cmd = "latexmk" + latexmk_args + target
+        os.system(cmd)
+        print(f"[A] Successfully generated temp/{algo_name}.pdf")
+
+        # algo_name.pdf -> algo_name-crop.pdf
+        cmd = f"pdfcrop temp/{algo_name}.pdf"
+        os.system(cmd)
+        print(f"[A] Cropped temp/{algo_name}.pdf")
+
+        # algo_name-crop.pdf -> algo_name.png
+        with fitz.open(f"temp/{algo_name}-crop.pdf") as cropped:
+            for page in cropped:
+                pix = page.get_pixmap(dpi=300)
+                pix.save(f"{algo_name}.png")
+        print(f"[A] Converted cropped pdf to {algo_name}.png")
+
+        # TODO: don't change directories
+        os.chdir("../../..")
+
+        shutil.move(f"posts/{post}/algos/{algo_name}.png", f"posts/{post}/{algo_name}.png")
+        print(f"[A] Moved {algo_name}.png to posts/{post}")
+
+        shutil.rmtree(f"posts/{post}/algos/temp")
+        # TODO: remove generated png?
+        print(f"[A] Cleaned up generated files for algos/{algo_name}")
+
+
+    stys = ["algo", "style", "ntabbing"]
+    for sty in stys:
+        os.remove(f"posts/{post}/algos/{sty}.sty")
+    print(f"[A] Removed .sty files from posts/{post}")
+
 
 
 def posts(root_file, gen_dir):
@@ -52,6 +128,12 @@ def posts(root_file, gen_dir):
         print(f"[A] Building post {post}")
         if not os.path.isfile(f"posts/{post}/main.tex"):
             raise RuntimeError(f"posts/{post}/main.tex does not exist, no post to build")
+
+
+        # Generate algo SVGs if they exist
+        if os.path.exists(f"posts/{post}/algos"):
+            gen_algos(root_file, gen_dir, post)
+
         # Render post fragment
         args = [
             "--theme=fragment",
@@ -91,6 +173,9 @@ def posts(root_file, gen_dir):
 
         print(f"[A] Wrote {post} to full file")
 
+        # TODO: PDFs
+
+        # Copy everything to gen_dir
         shutil.copy(f"posts/{post}/{post}-templated.html", f"{gen_dir}/posts/{post}.html")
         if os.path.exists(f"posts/{post}/main/{post}-images"):
             shutil.copytree(f"posts/{post}/main/{post}-images", f"{gen_dir}/posts/{post}-images")
@@ -99,6 +184,7 @@ def posts(root_file, gen_dir):
         print(f"[A] Cleaning up files for {post}")
         shutil.rmtree(f"posts/{post}/main")
         os.remove(f"posts/{post}/{post}-templated.html")
+
 
     print("[A] Built all posts")
 
