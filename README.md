@@ -5,4 +5,6 @@ Following the name of the blog, this build system is named after [Niels Abel](ht
 
 ### Requirements
 
-Abel uses [plasTeX](https://github.com/plastex/plastex) (currently version 3.0). To build SVGs for the `algo` and `nalgo` environment automatically you also need [pdf2svg](https://github.com/dawbarton/pdf2svg) 0.2.3. For debugging purposes, something to view SVGs would be helpful such as ImageMagick or Inkscape.
+Abel uses [plasTeX](https://github.com/plastex/plastex) (currently version 3.0). To build PNGs for the `algo` and `nalgo` environment automatically you need [PyMuPDF](https://pypi.org/project/PyMuPDF/) (currently version 1.23.8).
+PDFCrop is also necessary but should come with your system.
+Of course, working installations of [TeX Live](https://www.tug.org/texlive/) complete with [latexmk](https://www.cantab.net/users/johncollins/latexmk/index.html) are required.

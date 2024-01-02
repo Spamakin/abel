@@ -1,1 +1,2 @@
-plasTeX==3.0
+PyMuPDF>=1.23.8
+plasTeX>=3.0
