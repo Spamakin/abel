@@ -90,7 +90,7 @@ def gen_algos(gen_dir, post):
     print(f"[A] Removed .sty files from posts/{post}")
 
 
-def posts(root_file, gen_dir):
+def posts(gen_dir):
     if not os.path.exists(f"{gen_dir}/"):
         raise RuntimeError(f"{gen_dir}/ does not exist. Build main site first")
 
@@ -252,7 +252,7 @@ def main():
 
     clean(root_file, gen_dir)
     build_main(root_file, gen_dir)
-    posts(root_file, gen_dir)
+    posts(gen_dir)
 
 
 if __name__ == "__main__":
