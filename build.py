@@ -49,7 +49,7 @@ def gen_algos(gen_dir, post):
         print(f"[A] Making temporary directory for algo {algo_name} generation")
         args = [
             "-pdf",
-            "-silent",
+            # "-silent",
             "-outdir=temp/",
         ]
         latexmk_args = " "
@@ -180,8 +180,12 @@ def posts(gen_dir):
 
         # Remove generated files for post
         print(f"[A] Cleaning up files for {post}")
-        shutil.rmtree(f"posts/{post}/main")
+        shutil.rmtree(f"posts/{post}/main/")
+        # TODO: sometimes .auxtex-auto exists and sometimes it doesn't
+        if os.path.exists(f"posts/{post}/.auctex-auto/"):
+            shutil.rmtree(f"posts/{post}/.auctex-auto/")
         os.remove(f"posts/{post}/{post}-templated.html")
+        print(f"[A] Did clean up for {post}")
 
     print("[A] Built all posts")
 
@@ -191,6 +195,8 @@ def clean(root_file, gen_dir):
         os.remove(f"{root_file}.paux")
     if os.path.exists(gen_dir):
         shutil.rmtree(gen_dir)
+    if os.path.exists(f".auctex-auto/"):
+        shutil.rmtree(f".auctex-auto/")
     print("[A] Cleaned up files")
 
 
