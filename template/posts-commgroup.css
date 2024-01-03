@@ -111,7 +111,7 @@ div.wrapper{
     flex-grow:1
 }
 div.content-wrapper{
-    max-width:75ch
+    max-width:90ch;
 }
 @media (min-width:1024px){
     div.content-wrapper{
