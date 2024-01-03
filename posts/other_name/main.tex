@@ -4,79 +4,104 @@
 \input{style}
 
 \title{A Group by Any \newline Other Name}
-\date{2024-01-01}
+\date{2024--01--01}
 
 \begin{document}
 \maketitle
 
+% \subsection*{What is a Group?}
 
-Here is some testing of some math using \LaTeX\ and plas\TeX.
-But before we test any math, here is some text.
-One TODO I have is to make the blog sections have wider text.
-The main / front pages are fine as is, but the blog posts should have something different, something wider.
+% Groups are some of the ubiquitous objects in all of mathematics.
+% These are structures where you have some form of addition, a ``do-nothing'' element called an \textit{identity}, and a form of subtraction acting as the opposite of addition.
+% You are already familiar with groups!
+% The integers $\Z$ with addition and subtraction as you know it, as well as the identity $0$ form a group.
+% Invertible square matrices with real numbers as entries, denoted as $\GL(n, \R)$ for $n \times n$ matrices, form a group with addition and subtraction as multiplication by a matrix and its inverse respectively, as well as the identity matrix as the identity.
+% But even here we see some structural differences.
+% For any integers $x, y \in \Z$, we know that $x + y = y + x$.
+% But for matrices $A, B \in \GL(n, \R)$, we may not have that $AB = BA$.
+%
+% But how do you define a group?
+% Classically, a group is a structure with an operation obeying properties of addition and multiplication that you are familiar with, only now we will not restrict ourselves to just numbers or matrices.
 
-We already know that the following work:
-\begin{itemize}
-\item itemize
-\end{itemize}
+Groups are one of the most common structures in all of mathematics.
+They appear in many fields even outside of algebra such as differential topology and combinatorics, and have applications in areas such as chemistry and computational complexity theory.
+However, what defines a group, and how much play is there in this definition?
+First, let's define a group as you may have seen before.
 
-\begin{enumerate}
-\item enumerate
-\end{enumerate}
+\begin{defn}
+  A group $G$ is defined as a set of elements in $G$ along with an operation $\cdot$ satisfying the following \emph{axioms}:
+  \begin{enumerate}
+  \item \emph{Associativity}: For any $x, y, z \in G$, we have that $(x \cdot y) \cdot z = x \cdot (y \cdot z)$;
+  \item \emph{Identity}: There exists an element $e \in G$ which we call the identity such that for any $x \in G$, $e \cdot x = x = x \cdot e$;
+  \item \emph{Inverse}: For any $x \in G$, there exists $x^{-1} \in G$ such that $x \cdot x^{-1} = e = x^{-1} \cdot x$.
+  \end{enumerate}
+\end{defn}
 
-\begin{table}
-  \centering
-  \begin{tabular}{|c|}
-    \hline
-    Tables and Tabular \\
-    \hline
-  \end{tabular}
-  \caption{With Captions!}
-\end{table}
+Writing the $\cdot$ is annoying so from now on we'll adopt the tradition of writing $x \cdot y$ as $xy$.
+Similarly, we will use superscripts such as $x^{2} = xx$.
 
-\subsection*{Some Differential Geometry}
+\subsection*{A Slight Relaxation}
 
-Let $D$ be a compact $m$-dimensional oriented domain with boundary $\partial D$, $N$ a manifold, $F\colon \partial D \to N$ a smooth map, and $\omega \in \Omega^{m - 1}(N)$ a closed form.
-Prove that if $F$ can be extended to a smooth map $\tilde{F}\colon D \to N$ then $\int_{\partial D} F^{*}\omega = 0$.
+If we take a look at the identity axiom in a group $G$, we notice that it is two-sided.
+For any $x \in G$, we have that identity $e$ satisfies $ex = x = xe$.
+What if we relaxed this to a right-sided version?
+Define a right-handed version of the identity axiom where $e$ is the element such that for any $x \in G$, we just have that $xe = x$.
+In fact, lets do the same for the inverse axiom as well.
+It doesn't really make sense to do this for associativity since that's about three elements being operated on.
 
-Since $\omega$ is closed, we have that $\text{d} \omega = 0$.
-Then since $F = \tilde{F}\bigm|_{\partial D}$ we have that $\int_{\partial D} F^{*}\omega = \int_{\partial D} \tilde{F}^{*}\omega$.
-Thus we have
-\[
-  \int_{\partial D} F^{*}\omega = \int_{\partial D} \tilde{F}^{*}\omega = \int_{D} \text{d} \left(\tilde{F}^{*}\omega\right) = \int_{D} \tilde{F}^{*}(\text{d} \omega) = \int_{D} \tilde{F}^{*}(0) = 0.
-\]
+\begin{defn}
+  A right-handed group $R$ as a set with an operation $\cdot$ (which we will still omit writing) such that
+  \begin{enumerate}
+  \item \emph{Associativity}: Same as before;
+  \item \emph{RH-Identity}: There exists an element $e \in G$ which we call the identity such that for any $x \in G$, $xe = x$;
+  \item \emph{RH-Inverse}: For any $x \in G$, there exists $x^{-1} \in G$ such that $x \cdot x^{-1} = e$.
+  \end{enumerate}
+\end{defn}
+Clearly every group is also a right-handed group.
+But is the reverse true?
 
-Show that the bilinear multiplication on any associative algebra over $\mathbb{R}$ satisfies the Jacobi identity.
+\begin{theorem}
+  Every right-handed group $R$ is also a group.
+\end{theorem}
+\begin{proof}
+  We want to show that the axioms associativity, RH-identity, and RH-inverse imply the normal two-sided identity and inverse axioms.
+  First we show that any element $a \in R$ satisfying $a^{2} = a$ must be the identity.
+  Clearly the identity satisfies this with $e^{2} = ee = e$.
+  Indeed if $a$ is such an element then it has a right-inverse $a^{-1}$.
+  Thus we have that
+  \[
+    a = ae = a a a^{-1} = a a^{-1} = e
+  \]
+  and $a = e$.
 
-We will denote $a \circ b$ as $ab$ for all $a, b \in A$.
-A computation yields the desired result.
-\begin{align*}
-  [x, [y, z]] &= [x, yz - zy] \\
-              &= x(yz - zy) - (yz - zy)x \\
-              &= xyz - xzy - yzx + zyx \\
-              &= xyz - yxz - zxy + zyx + yxz - yzx - xzy + zxy \\
-              &= (xy - yx)z - z(xy - yx) + y(xz - zx) - (xz - zx)y \\
-              &= [xy - yx, z] + [y, xz - zx] = [[x, y], z] + [y, [x, z]]
-\end{align*}
+  Then for any element $x \in R$, we know it has a right inverse $x^{-1}$ satisfying $x x^{-1} = e$.
+  But by the above, we have $\left(x x^{-1}\right)^{2} = e^{2} = 2 = x x^{-1}$ and so $x x^{-1} x x^{-1} = \left( x x^{-1} \right) = x x^{-1}$.
+  Now take $x x^{-1} x x^{-1} = x x^{-1}$ and multiply on the left by $x^{-1}$ and on the right by $x$.
+  We have that
+  \[
+    x^{-1} x x^{-1} x x^{-1} x = x^{-1} x x^{-1} x.
+  \]
+  But since $x x^{-1} = e$, we may condense the left-hand side to $x^{-1} x$.
+  But now we have that $x^{-1} x x^{-1} x = x^{-1} x$ and by the above we have that $x^{-1} x = e$ meaning that $x^{-1}$ is not just a right-handed inverse, but also a left-handed inverse.
 
-\subsection*{Computer Science}
+  Note that nowhere above did we use that $e$ was a left-handed identity, just that $e$ is a right-handed identity.
+  We now prove that $e$ is also a left-handed identity.
+  Let $x \in R$.
+  We know that $x$ has a (left and right)-identity $x^{-1}$ and $x^{-1} x = e = x x^{-1}$.
+  Since $x e = x$, we have that
+  \[
+    x = x e = x x^{-1} x = e x.
+  \]
+  Thus $e$ is also a left-handed identity.
+\end{proof}
 
-In addition to mathematics, computer science will also be discussed.
+Pretty much the same proof works if you define the analogous left-handed group and want to show that left-handed groups are also groups.
+Thus we make no such distinction between groups and their left or right counterparts.
+This weakening of the axioms made no difference.
+However, we still had the same \textbf{number} of axioms in the definition of group and right-handed group, three axioms.
+Can we define groups using two axioms?
 
-\begin{center}
-  \includegraphics[width=5in]{test_algo.png}
-\end{center}
+\subsection*{Abstract Nonsense}
 
-\subsection*{Image Testing}
-
-\begin{center}
-  \begin{tikzcd}[row sep=1cm]
-  	{}   & \ker \pi' = T_mM \times \{0_p\} \ar[d, hookrightarrow] \ar["T_m F_p", dr] &  &  \\
-    \ker \pi = T_\sigma\Sigma \ar[r] \ar[r] \ar[r] \ar[r, hookrightarrow] &
-  	T_m M \times T_p P \ar["\pi", bend right, swap, rr] \ar["\pi'", d]  \ar["T_\sigma F",
-  	r, swap]& T_{F(\sigma)} N \ar["\rho", r, twoheadrightarrow]& \nu_{F(\sigma)} A \\
-     & T_p P &  &
-  \end{tikzcd}
-\end{center}
 
 \end{document}

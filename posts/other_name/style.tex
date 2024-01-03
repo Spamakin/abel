@@ -1,5 +1,10 @@
+% -------------------------------------------------------------------------
+%  Packages
+% -------------------------------------------------------------------------
+
 % Mathematics
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{tikz}
 \usepackage{tikz-cd}
@@ -10,3 +15,41 @@
 % References
 \usepackage{hyperref}
 \usepackage{cleveref}
+
+% -------------------------------------------------------------------------
+%  Page formatting
+% -------------------------------------------------------------------------
+
+% Mathematical environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{defn}[theorem]{Definition}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+
+% -------------------------------------------------------------------------
+%  Words and such
+% -------------------------------------------------------------------------
+
+% ---- LATIN ----
+\newcommand*\etal{et~al.}
+\newcommand*\ie{i.e.}
+\newcommand*\eg{e.g.}
+\newcommand*\vitae{vit\ae{}}
+\newcommand*\apriori{a~priori}
+\newcommand*\aposteriori{a~posteriori}  % I did not know this was a thing
+
+% -------------------------------------------------------------------------
+%  Math operators and symbols
+% -------------------------------------------------------------------------
+
+% ---- OPERATORS ----
+\DeclareMathOperator{\GL}{GL}
+
+% ---- SYMBOLS ----
+\newcommand*\N{\mathbb{N}}
+\newcommand*\Z{\mathbb{Z}}
+\newcommand*\Q{\mathbb{Q}}
+\newcommand*\R{\mathbb{R}}
+\newcommand*\C{\mathbb{C}}
+\newcommand*\F{\mathbb{F}}
+\newcommand*\E{\mathbb{E}}
