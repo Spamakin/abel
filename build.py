@@ -89,6 +89,7 @@ def gen_algos(gen_dir, post):
         os.remove(f"posts/{post}/algos/{sty}.sty")
     print(f"[A] Removed .sty files from posts/{post}")
 
+
 def clean_posts(post):
     print(f"[A] Cleaning up files for {post}")
     shutil.rmtree(f"posts/{post}/main/")
@@ -97,6 +98,7 @@ def clean_posts(post):
         shutil.rmtree(f"posts/{post}/.auctex-auto/")
     os.remove(f"posts/{post}/{post}-templated.html")
     print(f"[A] Did clean up for {post}")
+
 
 def posts(gen_dir):
     if not os.path.exists(f"{gen_dir}/"):
@@ -219,15 +221,17 @@ def clean_main(root_file, gen_dir):
 
     if os.path.exists(f"{root_file}.paux"):
         os.remove(f"{root_file}.paux")
-    if os.path.exists(f".auctex-auto/"):
-        shutil.rmtree(f".auctex-auto/")
+    if os.path.exists(".auctex-auto/"):
+        shutil.rmtree(".auctex-auto/")
 
     print("[A] Cleaned up files")
+
 
 def fresh(gen_dir):
     if os.path.exists(gen_dir):
         shutil.rmtree(gen_dir)
     print("[A] Removed old generated directory")
+
 
 def build_main(root_file, gen_dir):
     print("[A] Building main files")
