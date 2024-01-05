@@ -28,8 +28,8 @@ They appear in many fields even outside of algebra such as differential topology
 However, what defines a group, and how much play is there in this definition?
 First, let's define a group as you may have seen before.
 
-\begin{defn}
-  A group $G$ is defined as a set of elements in $G$ along with an operation $\cdot$ satisfying the following \emph{axioms}:
+\begin{defn}\label{defn:grp}
+  A \emph{group} $G$ is defined as a set of elements in $G$ along with an operation $\cdot$ satisfying the following \emph{axioms}:
   \begin{enumerate}
   \item \emph{Associativity}: For any $x, y, z \in G$, we have that $(x \cdot y) \cdot z = x \cdot (y \cdot z)$;
   \item \emph{Identity}: There exists an element $e \in G$ which we call the identity such that for any $x \in G$, $e \cdot x = x = x \cdot e$;
@@ -37,8 +37,8 @@ First, let's define a group as you may have seen before.
   \end{enumerate}
 \end{defn}
 
-Writing the $\cdot$ is annoying so from now on we'll adopt the tradition of writing $x \cdot y$ as $xy$.
-Similarly, we will use superscripts such as $x^{2} = xx$.
+Writing the $\cdot$ is annoying so from now on I'll adopt the tradition of writing $x \cdot y$ as $xy$.
+Similarly, I will use superscripts such as $x^{2} = xx$.
 
 \subsection*{A Slight Relaxation}
 
@@ -49,8 +49,8 @@ Define a right-handed version of the identity axiom where $e$ is the element suc
 In fact, lets do the same for the inverse axiom as well.
 It doesn't really make sense to do this for associativity since that's about three elements being operated on.
 
-\begin{defn}
-  A right-handed group $R$ as a set with an operation $\cdot$ (which we will still omit writing) such that
+\begin{defn}\label{defn:rh-grp}
+  A \emph{right-handed} group $R$ as a set with an operation $\cdot$ (which we will still omit writing) such that
   \begin{enumerate}
   \item \emph{Associativity}: Same as before;
   \item \emph{RH-Identity}: There exists an element $e \in G$ which we call the identity such that for any $x \in G$, $xe = x$;
@@ -84,7 +84,7 @@ But is the reverse true?
   But since $x x^{-1} = e$, we may condense the left-hand side to $x^{-1} x$.
   But now we have that $x^{-1} x x^{-1} x = x^{-1} x$ and by the above we have that $x^{-1} x = e$ meaning that $x^{-1}$ is not just a right-handed inverse, but also a left-handed inverse.
 
-  Note that nowhere above did we use that $e$ was a left-handed identity, just that $e$ is a right-handed identity.
+  Note that nowhere in the above proof assumed that $e$ was a left-handed identity, just that $e$ is a right-handed identity.
   We now prove that $e$ is also a left-handed identity.
   Let $x \in R$.
   We know that $x$ has a (left and right)-identity $x^{-1}$ and $x^{-1} x = e = x x^{-1}$.
@@ -95,13 +95,94 @@ But is the reverse true?
   Thus $e$ is also a left-handed identity.
 \end{proof}
 
-Pretty much the same proof works if you define the analogous left-handed group and want to show that left-handed groups are also groups.
-Thus we make no such distinction between groups and their left or right counterparts.
+Pretty much the same proof works if you define the analogous left-handed group and want to show that left-handed groups are also equivalent to groups.
+Thus, there is no distinction between groups and their left or right counterparts.
 This weakening of the axioms made no difference.
-However, we still had the same \textbf{number} of axioms in the definition of group and right-handed group, three axioms.
-Can we define groups using two axioms?
+Can we redefine groups in more interesting ways?
 
 \subsection*{Abstract Nonsense}
 
+Category theory, also known as \href{https://en.wikipedia.org/wiki/Abstract_nonsense\#History}{abstract nonsense} by many, is a powerful framework for understanding various structures.
+A category is a collection of objects and functions, called morphisms, between these objects.
+Formally, little other structures exists:
+\begin{defn}\label{defn:cat}
+  A category $\textbf{C}$ is a collection of objects $\ob(\textbf{C})$ and morphisms $\hom(\textbf{C})$ between these objects.
+  If we have objects $A, B \in \ob(\textbf{C})$, a morphism $f$ from $A$ to $B$ is denoted $f\colon A \to B$.
+  Intuitively morphisms are functions, but they don't have to be!
+  We also have an operation $\circ$ called composition where if $f\colon A \to B$ and $g\colon B \to C$ are morphisms, then we have a morphism $g \circ f\colon A \to B$ where we apply the morphism $g$ after $f$.
+  This composition is associative, meaning that if we also have a morphism $h\colon C \to D$, then $(h \circ g) \circ f = h \circ (g \circ f)$.
+  We also require that a special identity morphism $\id_{A}$ exists for every object $A \in \ob(\textbf{C})$ such that $\id_{B} \circ f = f = f \circ \id_{A}$ for every morphism $f\colon A \to B$.
+\end{defn}
+
+This definition is somewhat reminiscent of a group!
+For example, the proof that the identity morphism in a category is unique for each object is very much the same as the proof that the identity in a group is unique.
+Consider a group $G$ and an element $x \in G$.
+Then we have a morphism of groups, also known as a group homomorphism, called left multiplication by $x$:
+\begin{align*}
+  L_{x}\colon G &\to G \\
+              g &\mapsto xg
+\end{align*}
+Right multiplication is defined in the way you expect.
+
+This allows us to view a singly group in a category-theoretic manner.
+Fix your favorite group $G$.
+Consider the not-yet-proven-to-be-category $\textbf{G}$ where the only object is $G$, so $\ob(\textbf{G}) = \set{G}$.
+Then let $\hom(\textbf{G})$ be all left-multiplications and right-multiplications in $G$.
+So $\hom(\textbf{G})$ is the set of all $L_{x}\colon G \to G$ and $R_{x}\colon G \to G$ for all $x \in G$.
+I claim that $\textbf{G}$ is a category.
+Composition of morphisms is just multiplication by two (or more) elements at once rather than just one element.
+For any elements $x, y \in G$ we have $L_{x} \circ L_{y} = L_{xy}$ and $R_{x} \circ R_{y} = R_{yx}$.
+Associativity of composition then follows from the fact that multiplication in a group is associative.
+As one may expect, we have that the identity morphism for $G$, $\id_{G}$, is $L_{e} = R_{e}$.
+Indeed composing with $L_{e}$ before or after $L_{x}$ for any $x \in G$ yields $L_{x}$ and similarly for $R_{x}$.
+Thus we have a category.
+
+Notice, however, that we did not use the fact that every element $x \in G$ has an inverse $x^{-1}$.
+We have that $L_{x} \circ L_{x^{-1}} = L_{e} = R_{x} \circ R_{x^{-1}}$.
+Thus, every one of our morphisms in $\textbf{G}$ is an \emph{isomorphism}: every morphism has an inverse.
+Let us take the definition of \Cref{defn:cat} and add the requirement that inverses exist.
+\begin{defn}\label{defn:groupoid}
+  A category $\textbf{G}$ where for every morphism $f\colon A \to B$, there exists a morphism $f^{-1}\colon B \to A$ such that $f^{-1} \circ f = \id_{A}$ and $f \circ f^{-1} = \id_{B}$ is called a groupoid.
+\end{defn}
+Thus above, we have defined a group as a groupoid with one object.
+
+\subsection*{One Law to Rule Them All}
+
+We can go further.
+In fact, we can use one single axiom to define what a group is.
+This is due to \textbf{Citation Later}.
+However, I will build off of an easier to understand exposition due to \textbf{Citation Later}.
+First a primer on \href{https://en.wikipedia.org/wiki/Reverse_Polish_notation}{\emph{reverse Polish notation}}.
+This notation is common in the early study of these axiomatic systems, and so I will use it here.
+It is a way of writing functions and their inputs without parentheses.
+If we wanted to notate the multiplication of two numbers $x$ and $y$, rather than writing $x * y$ in what is called \emph{infix notation}, we would write $x y *$ for reverse Polish notation.
+If you know how many arguments your functions take, then this removes the need for parentheses.
+
+Groups have two fundamental operations, multiplication and inversion, which take two inputs and one input respectively.
+If we want to somehow combine these into one axiom, we need a new operation.
+\begin{defn}\label{defn:rightdiv}
+  Let $G$ be a group.
+  Then the operation $/$ on $G$ called \emph{right division} takes two elements $x$ and $y$ and produces an element $z = x / y$ such that $zy = x$.
+\end{defn}
+In a group, $x / y = x y^{-1}$.
+So we have combined multiplication and inversion into a single operation.
+We will notate right division, multiplication, and inversion in reverse Polish notation with the letters $\rho$, $\mu$, and $\iota$ (to remember this, think about the English spelling):
+\begin{align*}
+  x y \rho = x / y, && x y \mu = x \cdot y, && x \iota = x^{-1}.
+\end{align*}
+Verify for yourself that the following identities hold.
+\begin{align*}
+  x \iota = x x \rho x \rho, && x y \mu = x y y \rho y \rho rho.
+\end{align*}
+It will be easier to see if you notice that $e = x x \rho$ and use some parentheses.
+
+Now imagine a set $G$ with the operation right division defined in \Cref{defn:rightdiv}, outside of all context of inversion and multiplication.
+Then we have the following theorem from \textbf{Citation Needed}, and I will omit the proof because it is far far too long to repeat:
+\begin{theorem}
+  A set $G$ with right division $\rho$ satisfying the following for all $x, y, z \in G$ is a group:
+  \[
+    x x x \rho y \rho z \rho x x \rho x \rho z \rho \rho \rho y.
+  \]
+\end{theorem}
 
 \end{document}
