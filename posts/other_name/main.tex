@@ -9,27 +9,13 @@
 \begin{document}
 \maketitle
 
-% \subsection*{What is a Group?}
-
-% Groups are some of the ubiquitous objects in all of mathematics.
-% These are structures where you have some form of addition, a ``do-nothing'' element called an \textit{identity}, and a form of subtraction acting as the opposite of addition.
-% You are already familiar with groups!
-% The integers $\Z$ with addition and subtraction as you know it, as well as the identity $0$ form a group.
-% Invertible square matrices with real numbers as entries, denoted as $\GL(n, \R)$ for $n \times n$ matrices, form a group with addition and subtraction as multiplication by a matrix and its inverse respectively, as well as the identity matrix as the identity.
-% But even here we see some structural differences.
-% For any integers $x, y \in \Z$, we know that $x + y = y + x$.
-% But for matrices $A, B \in \GL(n, \R)$, we may not have that $AB = BA$.
-%
-% But how do you define a group?
-% Classically, a group is a structure with an operation obeying properties of addition and multiplication that you are familiar with, only now we will not restrict ourselves to just numbers or matrices.
-
 Groups are one of the most common structures in all of mathematics.
 They appear in many fields even outside of algebra such as differential topology and combinatorics, and have applications in areas such as chemistry and computational complexity theory.
 However, what defines a group, and how much play is there in this definition?
 First, let's define a group as you may have seen before.
 
 \begin{defn}\label{defn:grp}
-  A \emph{group} $G$ is defined as a set of elements in $G$ along with an operation $\cdot$ satisfying the following \emph{axioms}:
+  A \emph{group} is defined as a set of elements $G$ along with an operation $\cdot$ satisfying the following \emph{axioms}:
   \begin{enumerate}
   \item \emph{Associativity}: For any $x, y, z \in G$, we have that $(x \cdot y) \cdot z = x \cdot (y \cdot z)$;
   \item \emph{Identity}: There exists an element $e \in G$ which we call the identity such that for any $x \in G$, $e \cdot x = x = x \cdot e$;
@@ -39,6 +25,7 @@ First, let's define a group as you may have seen before.
 
 Writing the $\cdot$ is annoying so from now on I'll adopt the tradition of writing $x \cdot y$ as $xy$.
 Similarly, I will use superscripts such as $x^{2} = xx$.
+Although the definition of a group technically only includes a single binary operation $\cdot$ taking two elements of $G$ and producing a new element in $G$, we often think about inversion of an element, $x \mapsto x^{-1}$, as an operation in its own right.
 
 \subsection*{A Slight Relaxation}
 
@@ -50,55 +37,203 @@ In fact, lets do the same for the inverse axiom as well.
 It doesn't really make sense to do this for associativity since that's about three elements being operated on.
 
 \begin{defn}\label{defn:rh-grp}
-  A \emph{right-handed} group $R$ as a set with an operation $\cdot$ (which we will still omit writing) such that
+  A \emph{right-handed} group is a set $R$ with an operation $\cdot$ such that
   \begin{enumerate}
-  \item \emph{Associativity}: Same as before;
-  \item \emph{RH-Identity}: There exists an element $e \in G$ which we call the identity such that for any $x \in G$, $xe = x$;
+  \item \emph{Associativity}: Same as in \Cref{defn:grp};
+  \item \emph{RH-Identity}: There exists an identity element $e \in G$ such that for any $x \in G$, $xe = x$;
   \item \emph{RH-Inverse}: For any $x \in G$, there exists $x^{-1} \in G$ such that $x \cdot x^{-1} = e$.
   \end{enumerate}
 \end{defn}
-Clearly every group is also a right-handed group.
-But is the reverse true?
 
-\begin{theorem}
+\begin{theorem}\label{thrm:rh-grp_is_grp}
   Every right-handed group $R$ is also a group.
 \end{theorem}
+
 \begin{proof}
-  We want to show that the axioms associativity, RH-identity, and RH-inverse imply the normal two-sided identity and inverse axioms.
-  First we show that any element $a \in R$ satisfying $a^{2} = a$ must be the identity.
+  Clearly every group is also a right-handed group.
+  So I will not write out that portion of the proof.
+
+  We want to show that the axioms Associativity, RH-Identity, and RH-Inverse imply the normal two-sided Identity and Inverse axioms.
+  First we show that any element $a \in R$ satisfying $a^{2} = a$ must be the identity element $e$.
   Clearly the identity satisfies this with $e^{2} = ee = e$.
-  Indeed if $a$ is such an element then it has a right-inverse $a^{-1}$.
-  Thus we have that
+  If $a$ is such an element, then it has a right-inverse $a^{-1}$ where $a a^{-1} = e$.
+  Thus, we have that
   \[
-    a = ae = a a a^{-1} = a a^{-1} = e
+    a = ae = a a a^{-1} = a^{2} a^{-1} = a a^{-1} = e
   \]
   and $a = e$.
 
   Then for any element $x \in R$, we know it has a right inverse $x^{-1}$ satisfying $x x^{-1} = e$.
-  But by the above, we have $\left(x x^{-1}\right)^{2} = e^{2} = 2 = x x^{-1}$ and so $x x^{-1} x x^{-1} = \left( x x^{-1} \right) = x x^{-1}$.
-  Now take $x x^{-1} x x^{-1} = x x^{-1}$ and multiply on the left by $x^{-1}$ and on the right by $x$.
-  We have that
+  Thus for all $x \in R$ we have that
   \[
-    x^{-1} x x^{-1} x x^{-1} x = x^{-1} x x^{-1} x.
+    x x^{-1} x x^{-1} = \left(x x^{-1}\right)^{2} = e^{2} = e = x x^{-1}.
   \]
-  But since $x x^{-1} = e$, we may condense the left-hand side to $x^{-1} x$.
-  But now we have that $x^{-1} x x^{-1} x = x^{-1} x$ and by the above we have that $x^{-1} x = e$ meaning that $x^{-1}$ is not just a right-handed inverse, but also a left-handed inverse.
+  Now consider $x^{-1} x x^{-1} x$.
+  We have that
+  \begin{align*}
+    x^{-1} x x^{-1} x &= x^{-1} \left( x x^{-1} \right) x x^{-1} x \\
+                      &= x^{-1} x x^{-1} x x^{-1} x \\
+                      &= x^{-1} \left(x x^{-1} x x^{-1}\right) x \\
+                      &= x^{-1} \left(x x^{-1}\right) x = x^{-1} x.
+  \end{align*}
+  But now we have that $x^{-1} x x^{-1} x = x^{-1} x$.
+  By the above, this means that $x^{-1} x = e$ and that $x^{-1}$ is not just a right-handed inverse, but also a left-handed inverse.
 
-  Note that nowhere in the above proof assumed that $e$ was a left-handed identity, just that $e$ is a right-handed identity.
+  Note that nowhere in the above proof did we assume that $e$ was a left-handed identity, just that $e$ is a right-handed identity.
   We now prove that $e$ is also a left-handed identity.
   Let $x \in R$.
-  We know that $x$ has a (left and right)-identity $x^{-1}$ and $x^{-1} x = e = x x^{-1}$.
+  We know that $x$ has a (left and right)-inverse $x^{-1}$ so $x^{-1} x = e = x x^{-1}$.
   Since $x e = x$, we have that
   \[
     x = x e = x x^{-1} x = e x.
   \]
-  Thus $e$ is also a left-handed identity.
+  Thus, $e$ is also a left-handed identity and overall $R$ is a group.
 \end{proof}
 
 Pretty much the same proof works if you define the analogous left-handed group and want to show that left-handed groups are also equivalent to groups.
 Thus, there is no distinction between groups and their left or right counterparts.
-This weakening of the axioms made no difference.
+While we technically gave an alternative definition of groups, this is
 Can we redefine groups in more interesting ways?
+It turns out you can!
+I will show you how groups can be defined in terms of equations (even a single equation), in terms of a new operation, and even in terms of abstract higher-math nonsense.
+
+\subsection*{Axioms are Equations}
+
+One major motivation of studying group theory is studying algebraic equations.
+Following this motivation, we can formulate groups as satisfying certain equations.
+This result is not from anywhere in particular and is sort of a folklore result.
+\begin{defn}\label{defn:eq-grp}
+  An \emph{equational group} is a set $E$ with elements satisfying the following axioms:
+  \begin{enumerate}
+  \item \emph{E-Product}: For every element $x, y \in E$ there exists a unique element $xy \in E$;
+  \item \emph{E-Associativity}: For every $x, y, z \in E$, the equation $a(bc) = (ab)c$ is true;
+  \item \emph{E-Solution}: For every $x, y \in E$, there exists at least one element $a$ and one element $b$ in $E$ such that the equations $xa = y$ and $bx = y$ are true.
+  \end{enumerate}
+\end{defn}
+
+\begin{theorem}
+  Equational groups are equivalent to groups.
+\end{theorem}
+\begin{proof}
+  Consider a group $G$.
+  By the definition of product in a group, $G$ satisfies the axiom E-Product.
+  Similarly, multiplication in a group $G$ is associative and so $G$ satisgies the axiom E-Assocativity.
+  Finally, let $x, y \in G$.
+  Then $a = x^{-1}y$ and $b = yx^{-1}$, both of which exist since $x$ and $y$ exist, shows that $G$ satisfies the E-Solution.
+  Thus groups are also equational groups.
+
+  Now let $E$ be an equational group.
+  Note that the defintion of equational group does not explicitly define an operation like in the definition of group (\Cref{defn:grp}).
+  We will give $E$ an operation using axiom E-Product to define $x \cdot y = xy$ for all $x, y \in E$.
+  This product satisfies associativity of a group since we have the axiom E-Associativity.
+
+  We want to show that certain elements, identies and inverses, exist.
+  These elements satisfy certain equations as defined, so we should use the axiom E-Solution.
+  To show that the identity element exists, let $x, y \in E$.
+  Then by E-Solution, there exists left and right identity elements $a$ and $b$ such that $xa = x$ and $by = y$.
+  Similarly, there exists elements $a'$ and $b'$ such that $ya' = a$ and $b'x = b$.
+  Thus
+  \[
+    b = b'x = b'xa = ba = bya' = ya' a.
+  \]
+  Thus, $a = b$ is our multiplicative identity element, which we will now call $e$.
+  This is the identity element for all of $E$ since $x$ and $y$ were arbitrary.
+  The intutition for this proof occurs in the middle, with $ba$, reflecting that $e^{2} = e$.
+  We saw this in the proof of \Cref{thrm:rh-grp_is_grp}.
+
+  To see that inverses exist, we immediately have by E-Solution that for $x \in E$, there exists elements $a$ and $b$ such that $xa = e = bx$.
+  Thus we have that
+  \[
+    b = be = bxa = ea = a.
+  \]
+  Thus, left and right inverses for each element in $E$ exist and are equivalent yielding that every element in $E$ has an inverse $x^{-1} = a = b$.
+  Again the intuition here is that $x^{-1} x x^{-1} = x$ by grouping with parentheses either the left two elements or the right two elements.
+  Overall we have that groups are equivalent to equational groups.
+\end{proof}
+
+\subsection*{\ldots is Multiplication is Division is Multiplication is Division is \ldots}
+
+Typically, the definition of the binary operations $\cdot\colon G \times G \to G$ for a group is thought of in a multiplicative manner: combine two elements $x$ and $y$ to get a new one $xy$.
+But can we define groups a divisive manner: tearing $y$ off of $x$ and getting an element $z$ representing whatever is leftover?
+Since we have notions of both multiplication and inversion in our normal definition (\Cref{defn:grp}) of a group, we can indeed do this.
+I found this definition during my research for this post from this \href{https://mathoverflow.net/questions/277938/wieners-axiomatization-of-the-group-law-based-on-division}{MathOverflow} post.
+
+\begin{defn}\label{defn:div-grp}
+  A \emph{Division Group} is a set $D$ along with an operation $/$ satisfying
+  \begin{enumerate}
+  \item \emph{D-Inversion}: There exists a unique element $e \in D$ such that for all $x \in D$, we have that $x / x = e$;
+  \item \emph{D-Identity}: For all $x \in D$ and the element $e$, we have that $x / e = x$;
+  \item \emph{D-Cancellation}: For any $x, y, z \in D$, We have that $(x / z) / (y / z) = x / y$.
+  \end{enumerate}
+\end{defn}
+
+\begin{theorem}\label{thrm:div-grp_is_grp}
+  Division groups are equivalent to groups.
+\end{theorem}
+\begin{proof}
+  Showing that a group is a division group is simple.
+  Intuitively, division is just multiplication by the inverse and so we can take all of the axioms of \Cref{defn:div-grp} and replace $x / y$ with $x y^{-1}$ and see that the group axioms imply the division group axioms.
+
+  Now suppose we have a division group $D$.
+  We first need to translate from $/$ to the operations multiplication and inversion.
+  Let $xy = x / (e / y)$ and $x^{-1} = e / x$ for all $x, y \in D$.
+  Then we also claim that our multiplicative identity is $e \in D$.
+  Then all that is left is to check that the axioms in \Cref{defn:grp} are satisfied by this translation.
+  These are all just computations of various levels of tedium and juggling of parentheses.
+  Let $x, y, z \in D$.
+  For associativity we have
+  \begin{align*}
+    (xy)z &= (x / (e / y)) / (e / z)                    \tag{Translation}     \\
+          &= (x / (e / y)) / ((e / z) / e)              \tag{D-Identity}      \\
+          &= (x / (e / y)) / (((e / z) / y) / (e / y))  \tag{D-Cancellation}  \\
+          &= x / ((e / z) / y)                          \tag{D-Cancellation}  \\
+          &= x / (((e / z) / (e / z)) / (y / (e / z)))  \tag{D-Cancellation}  \\
+          &= x / (e / (y / (e / z)))                    \tag{D-Inversion}  \\
+          &= x(yz).                                     \tag{Translation}
+  \end{align*}
+  Fortunately, proving identity and existence of inversion is simpler:
+  \[
+    ex = e / (e / x) = (x / x) / (e / x) = x / e = x = x / e = x / (e / e) = xe
+  \]
+  \[
+    x x^{-1} = x / (e / (e / x)) = x / ((x / x) / (e / x)) = x / (x / e) = x / x = x = (e / x) / (e / x) = x^{-1} x.
+  \]
+  Thus, division groups are equivalent to groups.
+\end{proof}
+An ever-so-slightly shorter proof would have been proving directly that division groups are equivalent to right-handed groups and then invoking the fact that right-handed groups are equivalent to groups.
+
+\subsection*{One Law to Rule Them All}
+
+There is a way to combine ideas from the previous two notions and use a single equation to define what a group is using division.
+This is due to \textbf{Citation Later}.
+However, I will build off of an easier to understand exposition due to \textbf{Citation Later}.
+First a primer on \href{https://en.wikipedia.org/wiki/Reverse_Polish_notation}{\emph{reverse Polish notation}}.
+This notation is common in the early study of these axiomatic systems, and so I will use it here.
+It is a way of writing functions and their inputs without parentheses.
+If we wanted to notate the multiplication of two numbers $x$ and $y$, rather than writing $x \cdot y$ in what is called \emph{infix notation}, we would write $x y \cdot$ for reverse Polish notation.
+If you know how many arguments your functions take, then this removes the need for parentheses.
+
+In a group, $x / y = x y^{-1}$ where the operation right division $/$ is from \Cref{defn:div-grp}.
+Here we are using that division groups are equivalent to groups (\Cref{thrm:div-grp_is_grp}).
+We will notate right division, multiplication, and inversion in reverse Polish notation with the letters $\rho$, $\mu$, and $\iota$:
+\begin{align*}
+  x y \rho = x / y, && x y \mu = x \cdot y, && x \iota = x^{-1}.
+\end{align*}
+Verify for yourself that the following identities hold.
+\begin{align*}
+  x \iota = x x \rho x \rho, && x y \mu = x y y \rho y \rho \rho.
+\end{align*}
+It will be easier to see if you notice that $e = x x \rho$ and use some parentheses.
+
+Now imagine a set $G$ with the operation right division $\rho$, outside of all context of inversion and multiplication.
+Then we have the following theorem from \textbf{Citation Needed}:
+\begin{theorem}
+  A set $G$ with right division $\rho$ satisfying the following for all $x, y, z \in G$ is a group:
+  \[
+    x x x \rho y \rho z \rho x x \rho x \rho z \rho \rho \rho = y.
+  \]
+\end{theorem}
+I will omit the proof because it is far far too long to repeat.
 
 \subsection*{Abstract Nonsense}
 
@@ -124,65 +259,27 @@ Then we have a morphism of groups, also known as a group homomorphism, called le
 \end{align*}
 Right multiplication is defined in the way you expect.
 
-This allows us to view a singly group in a category-theoretic manner.
+This allows us to view a single group in a category-theoretic manner.
 Fix your favorite group $G$.
 Consider the not-yet-proven-to-be-category $\textbf{G}$ where the only object is $G$, so $\ob(\textbf{G}) = \set{G}$.
 Then let $\hom(\textbf{G})$ be all left-multiplications and right-multiplications in $G$.
 So $\hom(\textbf{G})$ is the set of all $L_{x}\colon G \to G$ and $R_{x}\colon G \to G$ for all $x \in G$.
 I claim that $\textbf{G}$ is a category.
+
 Composition of morphisms is just multiplication by two (or more) elements at once rather than just one element.
 For any elements $x, y \in G$ we have $L_{x} \circ L_{y} = L_{xy}$ and $R_{x} \circ R_{y} = R_{yx}$.
 Associativity of composition then follows from the fact that multiplication in a group is associative.
 As one may expect, we have that the identity morphism for $G$, $\id_{G}$, is $L_{e} = R_{e}$.
-Indeed composing with $L_{e}$ before or after $L_{x}$ for any $x \in G$ yields $L_{x}$ and similarly for $R_{x}$.
-Thus we have a category.
+Indeed, composing with $L_{e}$ before or after $L_{x}$ for any $x \in G$ yields $L_{x}$ and similarly for $R_{x}$.
+Thus, we have a category.
 
 Notice, however, that we did not use the fact that every element $x \in G$ has an inverse $x^{-1}$.
 We have that $L_{x} \circ L_{x^{-1}} = L_{e} = R_{x} \circ R_{x^{-1}}$.
 Thus, every one of our morphisms in $\textbf{G}$ is an \emph{isomorphism}: every morphism has an inverse.
-Let us take the definition of \Cref{defn:cat} and add the requirement that inverses exist.
+Let us take the definition of a category (\Cref{defn:cat}) and add the requirement that inverses exist.
 \begin{defn}\label{defn:groupoid}
   A category $\textbf{G}$ where for every morphism $f\colon A \to B$, there exists a morphism $f^{-1}\colon B \to A$ such that $f^{-1} \circ f = \id_{A}$ and $f \circ f^{-1} = \id_{B}$ is called a groupoid.
 \end{defn}
-Thus above, we have defined a group as a groupoid with one object.
-
-\subsection*{One Law to Rule Them All}
-
-We can go further.
-In fact, we can use one single axiom to define what a group is.
-This is due to \textbf{Citation Later}.
-However, I will build off of an easier to understand exposition due to \textbf{Citation Later}.
-First a primer on \href{https://en.wikipedia.org/wiki/Reverse_Polish_notation}{\emph{reverse Polish notation}}.
-This notation is common in the early study of these axiomatic systems, and so I will use it here.
-It is a way of writing functions and their inputs without parentheses.
-If we wanted to notate the multiplication of two numbers $x$ and $y$, rather than writing $x * y$ in what is called \emph{infix notation}, we would write $x y *$ for reverse Polish notation.
-If you know how many arguments your functions take, then this removes the need for parentheses.
-
-Groups have two fundamental operations, multiplication and inversion, which take two inputs and one input respectively.
-If we want to somehow combine these into one axiom, we need a new operation.
-\begin{defn}\label{defn:rightdiv}
-  Let $G$ be a group.
-  Then the operation $/$ on $G$ called \emph{right division} takes two elements $x$ and $y$ and produces an element $z = x / y$ such that $zy = x$.
-\end{defn}
-In a group, $x / y = x y^{-1}$.
-So we have combined multiplication and inversion into a single operation.
-We will notate right division, multiplication, and inversion in reverse Polish notation with the letters $\rho$, $\mu$, and $\iota$ (to remember this, think about the English spelling):
-\begin{align*}
-  x y \rho = x / y, && x y \mu = x \cdot y, && x \iota = x^{-1}.
-\end{align*}
-Verify for yourself that the following identities hold.
-\begin{align*}
-  x \iota = x x \rho x \rho, && x y \mu = x y y \rho y \rho rho.
-\end{align*}
-It will be easier to see if you notice that $e = x x \rho$ and use some parentheses.
-
-Now imagine a set $G$ with the operation right division defined in \Cref{defn:rightdiv}, outside of all context of inversion and multiplication.
-Then we have the following theorem from \textbf{Citation Needed}, and I will omit the proof because it is far far too long to repeat:
-\begin{theorem}
-  A set $G$ with right division $\rho$ satisfying the following for all $x, y, z \in G$ is a group:
-  \[
-    x x x \rho y \rho z \rho x x \rho x \rho z \rho \rho \rho y.
-  \]
-\end{theorem}
+Above we have defined a group as a groupoid with one object.
 
 \end{document}
