@@ -176,7 +176,8 @@ li>p{
     fill:currentColor
 }
 h1,h2,h3,h4,h5,h6{
-    font-family:Lucida Grande,Arial,Helvetica,sans-serif
+    font-family:Lucida Grande,Arial,Helvetica,sans-serif;
+    font-weight:bold;
 }
 h1{
     font-size:64px;
@@ -188,7 +189,7 @@ h1,h2{
 }
 h2{
     font-size:1.5rem;
-    margin:.8rem 0
+    margin:1.3rem 0
 }
 h3,h4{
     margin:.67rem 0;
