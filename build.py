@@ -17,18 +17,10 @@ def run_plastex(args, target):
 
 
 def gen_algos(gen_dir, post):
-    if not os.path.exists(f"posts/{post}/algos"):
-        raise RuntimeError(f"algos/ does not exist in posts/{post}, which is impossible.")
-
     # copy template/algos/style.sty, algo.sty, latexmkrc
-    if not os.path.exists("template/algos"):
-        raise RuntimeError("algos/ does not exist in template")
-    else:
-        stys = ["algo", "style", "ntabbing"]
-        for sty in stys:
-            if not os.path.exists(f"template/algos/{sty}.sty"):
-                raise RuntimeError(f"{sty}.sty does not exist in template/algos")
-            shutil.copy(f"template/algos/{sty}.sty", f"posts/{post}/algos/")
+    stys = ["algo", "style", "ntabbing"]
+    for sty in stys:
+        shutil.copy(f"template/algos/{sty}.sty", f"posts/{post}/algos/")
     print(f"[A] Building algorithm pngs for {post}")
 
     # for algo_name.tex in algos/
@@ -49,17 +41,17 @@ def gen_algos(gen_dir, post):
         print(f"[A] Making temporary directory for algo {algo_name} generation")
         args = [
             "-pdf",
-            # "-silent",
             "-outdir=temp/",
         ]
         latexmk_args = " "
         for arg in args:
-            print(f"    {arg}")
             latexmk_args += arg + " "
         target = f"{algo_name}.tex"
         print(f"[A] Running Latexmk with target {target} and the following args:")
         cmd = "latexmk" + latexmk_args + target
         os.system(cmd)
+        if not os.path.exists(f"temp/{algo_name}.pdf"):
+            raise RuntimeError(f"[A] temp/{algo_name}.pdf was not built successfully")
         print(f"[A] Successfully generated temp/{algo_name}.pdf")
 
         # algo_name.pdf -> algo_name-crop.pdf
@@ -102,7 +94,7 @@ def clean_posts(post):
 
 def posts(gen_dir):
     if not os.path.exists(f"{gen_dir}/"):
-        raise RuntimeError(f"{gen_dir}/ does not exist. Build main site first")
+        raise RuntimeError(f"[A] {gen_dir}/ does not exist. Build main site first")
 
     print("[A] Building posts")
     os.mkdir(f"{gen_dir}/posts/")
@@ -120,23 +112,15 @@ def posts(gen_dir):
     # Upon rendering a post into a fragment, we concatenate the results
 
     # Copy posts-commgroup.css into main/posts/
-    if not os.path.exists("template/posts-commgroup.css"):
-        raise RuntimeError("posts-commgroup.css does not exist in template/")
     shutil.copy("template/posts-commgroup.css", f"{gen_dir}/styles/")
     print("[A] Copied posts-commgroup.css")
-
-    if not os.path.exists("template/posts-start.html"):
-        raise RuntimeError("posts-start.html does not exist in template/")
-    if not os.path.exists("template/posts-end.html"):
-        raise RuntimeError("posts-end.html does not exist in template/")
-    print("[A] Found template start and end")
 
     # Render each post
     posts = next(os.walk("posts/"))[1]
     for post in posts:
         print(f"[A] Building post {post}")
         if not os.path.isfile(f"posts/{post}/main.tex"):
-            raise RuntimeError(f"posts/{post}/main.tex does not exist, no post to build")
+            raise RuntimeError(f"[A] posts/{post}/main.tex does not exist, no post to build")
 
         # Generate algo SVGs if they exist
         if os.path.exists(f"posts/{post}/algos"):
@@ -156,7 +140,7 @@ def posts(gen_dir):
         print(f"[A] Built fragment for {post}")
 
         if not os.path.exists(f"posts/{post}/meta.json"):
-            raise RuntimeError(f"posts/{post}/meta.json does not exist, cannot get title")
+            raise RuntimeError(f"[A] posts/{post}/meta.json does not exist, cannot get title")
         with open(f"posts/{post}/meta.json", "r") as meta_data:
             meta = json.load(meta_data)
 
@@ -196,7 +180,7 @@ def posts(gen_dir):
 
 def fix_title_front(gen_dir, target_file, title):
     if not os.path.exists(f"{gen_dir}/"):
-        raise RuntimeError(f"{gen_dir}/ does not exist. Build main site first")
+        raise RuntimeError(f"[A] {gen_dir}/ does not exist. Build main site first")
 
     with open(f"{gen_dir}/{target_file}_fixed.html", "w") as idx_out:
         with open(f"{gen_dir}/{target_file}.html", "r") as idx_in:
@@ -212,7 +196,7 @@ def fix_title_front(gen_dir, target_file, title):
 
 def clean_main(root_file, gen_dir):
     if not os.path.exists(f"{gen_dir}/"):
-        raise RuntimeError(f"{gen_dir}/ does not exist. Build main site first")
+        raise RuntimeError(f"[A] {gen_dir}/ does not exist. Build main site first")
 
     # remove unused CSS
     os.remove(f"{gen_dir}/styles/theme-green.css")
@@ -230,7 +214,7 @@ def clean_main(root_file, gen_dir):
 def fresh(gen_dir):
     if os.path.exists(gen_dir):
         shutil.rmtree(gen_dir)
-    print("[A] Removed old generated directory")
+        print("[A] Removed old generated directory")
 
 
 def build_main(root_file, gen_dir):
@@ -254,14 +238,41 @@ def build_main(root_file, gen_dir):
     fix_title_front(gen_dir, "All-Posts", "All Posts")
 
 
+def check(root_file):
+    print("[A] Checking for necessary files")
+    if not os.path.exists(f"{root_file}.tex"):
+        raise RuntimeError(f"[A] Root file {root_file}.tex not found")
+    if not os.path.exists("posts/"):
+        raise RuntimeError("[A] Posts folder posts not found")
+    if not os.path.exists("template/"):
+        raise RuntimeError("[A] Templates folder templates/ not found")
+    else:
+        post_templates = ["posts-commgroup.css", "posts-start.html", "posts-start.html"]
+        print("[A] Checking for the following template files for posts:")
+        for temp in post_templates:
+            print(f"    {temp}")
+        for temp in post_templates:
+            if not os.path.exists(f"template/{temp}"):
+                raise RuntimeError(f"[A] {temp} does not exist in template/")
+        print("[A] Found template files")
+    if not os.path.exists("template/algos"):
+        raise RuntimeError("[A] algos/ does not exist in template/")
+    else:
+        stys = ["algo", "style", "ntabbing"]
+        print("[A] Checking for the following .sty files for algos:")
+        for sty in stys:
+            print(f"    {sty}.sty")
+        for sty in stys:
+            if not os.path.exists(f"template/algos/{sty}.sty"):
+                raise RuntimeError(f"[A] {sty}.sty does not exist in template/algos/")
+    print("[A] Found all necessary files")
+
+
 def main():
     root_file = "main"
     gen_dir = "gen"
 
-    # We assume we are working in the main directory
-    if not os.path.exists(f"{root_file}.tex"):
-        raise RuntimeError(f"{root_file}.tex does not exist in this location")
-
+    check(root_file)
     fresh(gen_dir)
     build_main(root_file, gen_dir)
     posts(gen_dir)
