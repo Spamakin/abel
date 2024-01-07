@@ -117,17 +117,21 @@ def gen_algos(gen_dir, post):
     print(good(f"Removed .sty files from posts/{post}"))
 
 
-def clean_post(post):
-    print(maybe(f"Cleaning up html files for {post}"))
-    shutil.rmtree(f"posts/{post}/main/")
-    os.remove(f"posts/{post}/{post}-templated.html")
-    print(good(f"Did clean up for {post}"))
-
-
 def clean_pdf(post):
     print(maybe(f"Cleaning up pdf files for {post}"))
     shutil.rmtree(f"posts/{post}/temp/")
     print(good(f"Did clean up for {post}"))
+
+
+def check_post(post):
+    print(maybe(f"Checking that post {post} is ready to be generated"))
+    if not os.path.isfile(f"posts/{post}/main.tex"):
+        raise RuntimeError(warn(f"posts/{post}/main.tex does not exist, no post to build"))
+    if not os.path.exists(f"posts/{post}/meta.json"):
+        raise RuntimeError(warn(f"posts/{post}/meta.json does not exist, cannot get title"))
+
+    print(maybe(f"Checks for post {post} were successful"))
+
 
 def gen_pdf(gen_dir, post):
     # TODO: don't change directories
@@ -149,6 +153,58 @@ def gen_pdf(gen_dir, post):
 
     # TODO: don't change directories
     os.chdir("../..")
+
+
+def clean_post(post):
+    print(maybe(f"Cleaning up html files for {post}"))
+    shutil.rmtree(f"posts/{post}/main/")
+    os.remove(f"posts/{post}/{post}-templated.html")
+    print(good(f"Did clean up for {post}"))
+
+
+def gen_post(gen_dir, post):
+    print(maybe(f"Building html for post {post}"))
+
+    # Generate algo SVGs if they exist
+    if os.path.exists(f"posts/{post}/algos"):
+        gen_algos(gen_dir, post)
+
+    # Render post fragment
+    args = [
+        "--theme=fragment",
+        "--split-level=-1",
+        f"--dir=posts/{post}/main/",
+        f"--image-filenames='{post}-images/$num'",
+        f"--filename={post}",
+    ]
+    target = f"posts/{post}/main.tex"
+    run_plastex(args, target)
+    print(good(f"Built fragment for {post}"))
+
+    with open(f"posts/{post}/meta.json", "r") as meta_data:
+        meta = json.load(meta_data)
+
+    # Assemble template
+    with open(f"posts/{post}/{post}-templated.html", "w") as curr_post:
+        with open("template/posts-start.html", "r") as start:
+            for line in start:
+                if line == "</head>\n":
+                    curr_post.write(f"<title>{meta['title']}</title>")
+                curr_post.write(line)
+        curr_post.write("\n")
+
+        with open(f"posts/{post}/main/{post}.html", "r") as content:
+            for line in content:
+                curr_post.write(line)
+        curr_post.write("\n")
+
+        with open("template/posts-end.html", "r") as end:
+            for line in end:
+                curr_post.write(line)
+        curr_post.write("\n")
+
+    print(good(f"Wrote {post} to full file"))
+
 
 def posts(gen_dir):
     if not os.path.exists(f"{gen_dir}/"):
@@ -176,59 +232,14 @@ def posts(gen_dir):
     # Render each post
     posts = next(os.walk("posts/"))[1]
     for post in posts:
-        print(maybe(f"Building post {post}"))
-        if not os.path.isfile(f"posts/{post}/main.tex"):
-            raise RuntimeError(warn(f"posts/{post}/main.tex does not exist, no post to build"))
+        check_post(post)
+        gen_post(gen_dir, post)
+        gen_pdf(gen_dir, post)
 
-        # Generate algo SVGs if they exist
-        if os.path.exists(f"posts/{post}/algos"):
-            gen_algos(gen_dir, post)
-
-        # Render post fragment
-        args = [
-            "--theme=fragment",
-            "--split-level=-1",
-            f"--dir=posts/{post}/main/",
-            f"--image-filenames='{post}-images/$num'",
-            f"--filename={post}",
-            "--packages-dir=pkgs",
-        ]
-        target = f"posts/{post}/main.tex"
-        run_plastex(args, target)
-        print(good(f"Built fragment for {post}"))
-
-        if not os.path.exists(f"posts/{post}/meta.json"):
-            raise RuntimeError(warn(f"posts/{post}/meta.json does not exist, cannot get title"))
-        with open(f"posts/{post}/meta.json", "r") as meta_data:
-            meta = json.load(meta_data)
-
-        # Assemble template
-        with open(f"posts/{post}/{post}-templated.html", "w") as curr_post:
-            with open("template/posts-start.html", "r") as start:
-                for line in start:
-                    if line == "</head>\n":
-                        curr_post.write(f"<title>{meta['title']}</title>")
-                    curr_post.write(line)
-            curr_post.write("\n")
-
-            with open(f"posts/{post}/main/{post}.html", "r") as content:
-                for line in content:
-                    curr_post.write(line)
-            curr_post.write("\n")
-
-            with open("template/posts-end.html", "r") as end:
-                for line in end:
-                    curr_post.write(line)
-            curr_post.write("\n")
-
-        print(good(f"Wrote {post} to full file"))
         # Copy everything to gen_dir
         shutil.copy(f"posts/{post}/{post}-templated.html", f"{gen_dir}/posts/{post}.html")
         if os.path.exists(f"posts/{post}/main/{post}-images"):
             shutil.copytree(f"posts/{post}/main/{post}-images", f"{gen_dir}/posts/{post}-images")
-
-        gen_pdf(gen_dir, post)
-        # Copy everything to gen_dir
         shutil.copy(f"posts/{post}/temp/main.pdf", f"{gen_dir}/posts/{post}.pdf")
 
         # Remove generated files for post
@@ -257,11 +268,6 @@ def fix_title_front(gen_dir, target_file, title):
 def clean_main(root_file, gen_dir):
     if not os.path.exists(f"{gen_dir}/"):
         raise RuntimeError(warn(f"{gen_dir}/ does not exist. Build main site first"))
-
-    # # remove unused CSS
-    # os.remove(f"{gen_dir}/styles/theme-green.css")
-    # os.remove(f"{gen_dir}/styles/theme-white.css")
-    # os.remove(f"{gen_dir}/styles/theme-blue.css")
 
     if os.path.exists(f"{root_file}.paux"):
         os.remove(f"{root_file}.paux")
@@ -328,7 +334,7 @@ def fresh(gen_dir):
         print(good("Cleaned old generated directory"))
 
 
-def check(root_file):
+def check_main(root_file):
     print(maybe("Checking for necessary files"))
     if not os.path.exists(f"{root_file}.tex"):
         raise RuntimeError(warn(f"Root file {root_file}.tex not found"))
@@ -384,7 +390,7 @@ def main():
     root_file = "main"
     gen_dir = "gen"
 
-    check(root_file)
+    check_main(root_file)
     fresh(gen_dir)
     build_main(root_file, gen_dir)
     posts(gen_dir)
