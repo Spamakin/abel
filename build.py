@@ -42,6 +42,16 @@ def run_plastex(args, target):
     os.system(cmd)
 
 
+def run_latexmk(args, target):
+    print(maybe(f"Running latexmk with target {target} and the following args:"))
+    latexmk_args = " "
+    for arg in args:
+        print(f"    {arg}")
+        latexmk_args += arg + " "
+    cmd = "latexmk" + latexmk_args + f"{target}"
+    os.system(cmd)
+
+
 def gen_algos(gen_dir, post):
     # copy template/algos/style.sty, algo.sty, latexmkrc
     stys = ["algo", "style", "ntabbing"]
@@ -67,17 +77,14 @@ def gen_algos(gen_dir, post):
         os.mkdir("temp")
 
         target = f"{algo_name}.tex"
-        print(maybe(f"Running Latexmk with target {target} and the following args:"))
         args = [
             "-pdf",
+            "-quiet",
             "-outdir=temp/",
         ]
-        latexmk_args = " "
-        for arg in args:
-            print(f"    {arg}")
-            latexmk_args += arg + " "
-        cmd = "latexmk" + latexmk_args + target
-        os.system(cmd)
+        run_latexmk(args, target)
+
+        # TODO better error checking
         if not os.path.exists(f"temp/{algo_name}.pdf"):
             raise RuntimeError(warn(f"temp/{algo_name}.pdf was not built successfully"))
         print(good(f"Successfully generated temp/{algo_name}.pdf"))
@@ -110,15 +117,38 @@ def gen_algos(gen_dir, post):
     print(good(f"Removed .sty files from posts/{post}"))
 
 
-def clean_posts(post):
-    print(maybe(f"Cleaning up files for {post}"))
+def clean_post(post):
+    print(maybe(f"Cleaning up html files for {post}"))
     shutil.rmtree(f"posts/{post}/main/")
-    # TODO: sometimes .auxtex-auto exists and sometimes it doesn't
-    if os.path.exists(f"posts/{post}/.auctex-auto/"):
-        shutil.rmtree(f"posts/{post}/.auctex-auto/")
     os.remove(f"posts/{post}/{post}-templated.html")
     print(good(f"Did clean up for {post}"))
 
+
+def clean_pdf(post):
+    print(maybe(f"Cleaning up pdf files for {post}"))
+    shutil.rmtree(f"posts/{post}/temp/")
+    print(good(f"Did clean up for {post}"))
+
+def gen_pdf(gen_dir, post):
+    # TODO: don't change directories
+    os.chdir(f"posts/{post}/")
+    os.mkdir("temp")
+
+    target = "main.tex"
+    args = [
+        "-pdf",
+        "-quiet",
+        "-outdir=temp/",
+    ]
+    run_latexmk(args, target)
+
+    # TODO better error checking
+    if not os.path.exists("temp/main.pdf"):
+        raise RuntimeError(warn("temp/main.pdf was not built successfully"))
+    print(good("Successfully generated temp/main.pdf"))
+
+    # TODO: don't change directories
+    os.chdir("../..")
 
 def posts(gen_dir):
     if not os.path.exists(f"{gen_dir}/"):
@@ -192,16 +222,18 @@ def posts(gen_dir):
             curr_post.write("\n")
 
         print(good(f"Wrote {post} to full file"))
-
-        # TODO: PDFs
-
         # Copy everything to gen_dir
         shutil.copy(f"posts/{post}/{post}-templated.html", f"{gen_dir}/posts/{post}.html")
         if os.path.exists(f"posts/{post}/main/{post}-images"):
             shutil.copytree(f"posts/{post}/main/{post}-images", f"{gen_dir}/posts/{post}-images")
 
+        gen_pdf(gen_dir, post)
+        # Copy everything to gen_dir
+        shutil.copy(f"posts/{post}/temp/main.pdf", f"{gen_dir}/posts/{post}.pdf")
+
         # Remove generated files for post
-        clean_posts(post)
+        clean_post(post)
+        clean_pdf(post)
 
     print(good("Built all posts"))
 
