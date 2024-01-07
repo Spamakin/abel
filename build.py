@@ -63,17 +63,19 @@ def gen_algos(gen_dir, post):
 
         # algo_name.tex -> algo_name.pdf
         # NOTE: --outdir is relative to -cd
-        os.mkdir("temp")
         print(maybe(f"Making temporary directory for algo {algo_name} generation"))
+        os.mkdir("temp")
+
+        print(maybe(f"Running Latexmk with target {target} and the following args:"))
         args = [
             "-pdf",
             "-outdir=temp/",
         ]
         latexmk_args = " "
         for arg in args:
+            print(f"    {arg}")
             latexmk_args += arg + " "
         target = f"{algo_name}.tex"
-        print(maybe(f"Running Latexmk with target {target} and the following args:"))
         cmd = "latexmk" + latexmk_args + target
         os.system(cmd)
         if not os.path.exists(f"temp/{algo_name}.pdf"):
