@@ -226,10 +226,10 @@ def clean_main(root_file, gen_dir):
     if not os.path.exists(f"{gen_dir}/"):
         raise RuntimeError(warn(f"{gen_dir}/ does not exist. Build main site first"))
 
-    # remove unused CSS
-    os.remove(f"{gen_dir}/styles/theme-green.css")
-    os.remove(f"{gen_dir}/styles/theme-white.css")
-    os.remove(f"{gen_dir}/styles/theme-blue.css")
+    # # remove unused CSS
+    # os.remove(f"{gen_dir}/styles/theme-green.css")
+    # os.remove(f"{gen_dir}/styles/theme-white.css")
+    # os.remove(f"{gen_dir}/styles/theme-blue.css")
 
     if os.path.exists(f"{root_file}.paux"):
         os.remove(f"{root_file}.paux")
@@ -243,8 +243,9 @@ def build_main(root_file, gen_dir):
     print(maybe("Building main files"))
 
     args = [
+        "--extra-templates=template/commgrp",
+        "--theme=commgrp",
         "--extra-css theme-commgroup.css",
-        "--no-theme-css",
         "--no-display-toc",
         "--filename='index [$title]'",
         "--split-level=-1",

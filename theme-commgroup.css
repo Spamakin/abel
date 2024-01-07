@@ -176,7 +176,7 @@ li>p{
     fill:currentColor
 }
 h1,h2,h3,h4,h5,h6{
-    font-family:Lucida Grande,Arial,Helvetica,sans-serif
+    font-family:Lucida Grande,Arial,Helvetica,sans-serif;
 }
 h1{
     font-size:64px;
@@ -430,7 +430,8 @@ svg#toc-toggle{
 h1#doc_title{
     color:#24292e;
     font-size:1.5rem;
-    margin:auto
+    margin:auto;
+    font-weight:bold;
 }
 #doc_title a,#doc_title a:visited{
     text-decoration:none;
