@@ -254,15 +254,29 @@ def build_main(root_file, gen_dir):
     target = f"{root_file}.tex"
     run_plastex(args, target)
 
-    print(good("Built Main Site"))
-
     fix_title_front(gen_dir, "index", "commutative.group")
     fix_title_front(gen_dir, "About", "About")
     fix_title_front(gen_dir, "All-Posts", "All Posts")
 
 
+    # TODO: These should be automatically copied...
+    print(maybe(f"Copying template files to {gen_dir}/"))
+    templates = ["symbol-defs.svg"]
+    shutil.copy(f"template/commgrp/symbol-defs.svg", f"{gen_dir}/symbol-defs.svg")
+
+    if not os.path.exists(f"{gen_dir}/js/"):
+        raise RuntimeError(warn(f"No js/ folder in {gen_dir}"))
+    js = ["jquery.min", "plastex", "svgxuse"]
+    for js_file in js:
+        shutil.copy(f"template/commgrp/js/{js_file}.js", f"{gen_dir}/js/{js_file}.js")
+    print(good("Copied template files"))
+
+    print(good("Built Main Site"))
+
+
 def fresh(gen_dir):
     if os.path.exists(gen_dir):
+
         shutil.rmtree(gen_dir)
         print(good("Removed old generated directory"))
 
@@ -284,9 +298,9 @@ def check(root_file):
             if not os.path.exists(f"template/{temp}"):
                 raise RuntimeError(warn(f"{temp} does not exist in template/"))
         print(good("Found template files"))
-    if not os.path.exists("template/algos"):
-        raise RuntimeError(warn("algos/ does not exist in template/"))
-    else:
+
+        if not os.path.exists("template/algos/"):
+            raise RuntimeError(warn("algos/ does not exist in template/"))
         stys = ["algo", "style", "ntabbing"]
         print(maybe("Checking for the following .sty files for algos:"))
         for sty in stys:
@@ -294,6 +308,28 @@ def check(root_file):
         for sty in stys:
             if not os.path.exists(f"template/algos/{sty}.sty"):
                 raise RuntimeError(warn(f"{sty}.sty does not exist in template/algos/"))
+
+        if not os.path.exists("template/commgrp/"):
+            raise RuntimeError(warn("commgrp/ does not exist in template/"))
+        # TODO: These should be automatically copied...
+        templates = ["default-layout.jinja2", "document-layout.jinja2", "symbol-defs.svg"]
+        print(maybe("Checking for the following template files in template/commgrp:"))
+        for temp in templates:
+            print(f"    {temp}")
+        for temp in templates:
+            if not os.path.exists(f"template/commgrp/{temp}"):
+                raise RuntimeError(warn(f"{temp} does not exist in template/commgrp/"))
+
+        if not os.path.exists("template/commgrp/js/"):
+            raise RuntimeError(warn("commgrp/js/ does not exist in template/"))
+        js = ["jquery.min", "plastex", "svgxuse"]
+        print(maybe("Checking for the following .js files in template/commgrp/js:"))
+        for js_file in js:
+            print(f"    {js_file}.js")
+        for js_file in js:
+            if not os.path.exists(f"template/commgrp/js/{js_file}.js"):
+                raise RuntimeError(warn(f"{js_file}.js does not exist in template/commgrp/js/"))
+
     print(good("Found all necessary files"))
 
 
