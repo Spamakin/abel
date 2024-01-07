@@ -276,9 +276,22 @@ def build_main(root_file, gen_dir):
 
 def fresh(gen_dir):
     if os.path.exists(gen_dir):
+        print(maybe("Cleaning old generated directory"))
 
-        shutil.rmtree(gen_dir)
-        print(good("Removed old generated directory"))
+        print(maybe("Removing .html files"))
+        html = [html_file[:-5] for html_file in next(os.walk(f"{gen_dir}"))[2] if html_file.endswith(".html")]
+        for html_file in html:
+            os.remove(f"{gen_dir}/{html_file}.html")
+
+        print(maybe("Removing .svg file"))
+        os.remove(f"{gen_dir}/symbol-defs.svg")
+
+        print(maybe("Removing folders"))
+        shutil.rmtree(f"{gen_dir}/js/")
+        shutil.rmtree(f"{gen_dir}/posts/")
+        shutil.rmtree(f"{gen_dir}/styles/")
+
+        print(good("Cleaned old generated directory"))
 
 
 def check(root_file):
