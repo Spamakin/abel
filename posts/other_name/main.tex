@@ -12,7 +12,7 @@
 Groups are one of the most common structures in all of mathematics.
 They appear in many fields even outside of algebra such as differential topology and combinatorics, and have applications in areas such as chemistry and computational complexity theory.
 However, what defines a group, and how much play is there in this definition?
-First, let's define a group as you may have seen before.
+First, I'll define a group as you may have seen before.
 
 \begin{defn}\label{defn:grp}
   A \emph{group} is defined as a set of elements $G$ along with an operation $\cdot$ satisfying the following \emph{axioms}:
@@ -29,12 +29,12 @@ Although the definition of a group technically only includes a single binary ope
 
 \subsection*{A Slight Relaxation}
 
-If we take a look at the identity axiom in a group $G$, we notice that it is two-sided.
+If we take a look at the Identity axiom in a group $G$, we notice that it is two-sided.
 For any $x \in G$, we have that identity $e$ satisfies $ex = x = xe$.
 What if we relaxed this to a right-sided version?
-Define a right-handed version of the identity axiom where $e$ is the element such that for any $x \in G$, we just have that $xe = x$.
-In fact, lets do the same for the inverse axiom as well.
-It doesn't really make sense to do this for associativity since that's about three elements being operated on.
+Define a right-handed version of the Identity axiom where $e$ is the element such that for any $x \in G$, we just have that $xe = x$.
+In fact, let's do the same for the Inverse axiom as well.
+It doesn't really make sense to do this for Associativity since that's about three elements being operated on.
 
 \begin{defn}\label{defn:rh-grp}
   A \emph{right-handed} group is a set $R$ with an operation $\cdot$ such that
@@ -53,8 +53,9 @@ It doesn't really make sense to do this for associativity since that's about thr
   Clearly every group is also a right-handed group.
   So I will not write out that portion of the proof.
 
-  We want to show that the axioms Associativity, RH-Identity, and RH-Inverse imply the normal two-sided Identity and Inverse axioms.
-  First we show that any element $a \in R$ satisfying $a^{2} = a$ must be the identity element $e$.
+  Let $R$ be a right-handed group.
+  We need to show that the axioms Associativity, RH-Identity, and RH-Inverse in \Cref{defn:rh-grp} imply the normal two-sided Identity and Inverse axioms in \Cref{defn:grp}.
+  First we show that any element $a \in R$ satisfying $a^{2} = a$ must be the right-handed identity element $e$.
   Clearly the identity satisfies this with $e^{2} = ee = e$.
   If $a$ is such an element, then it has a right-inverse $a^{-1}$ where $a a^{-1} = e$.
   Thus, we have that
@@ -63,8 +64,8 @@ It doesn't really make sense to do this for associativity since that's about thr
   \]
   and $a = e$.
 
-  Then for any element $x \in R$, we know it has a right inverse $x^{-1}$ satisfying $x x^{-1} = e$.
-  Thus for all $x \in R$ we have that
+  Then, for any element $x \in R$, we know it has a right inverse $x^{-1}$ satisfying $x x^{-1} = e$.
+  Thus, for all $x \in R$ we have that
   \[
     x x^{-1} x x^{-1} = \left(x x^{-1}\right)^{2} = e^{2} = e = x x^{-1}.
   \]
@@ -87,21 +88,22 @@ It doesn't really make sense to do this for associativity since that's about thr
   \[
     x = x e = x x^{-1} x = e x.
   \]
-  Thus, $e$ is also a left-handed identity and overall $R$ is a group.
+  Thus, $e$ is also a left-handed identity.
+  Overall we have shown that $R$ satisfies all axioms of a group given in \Cref{defn:grp} meaning $R$ is a group.\ \qed
 \end{proof}
 
 Pretty much the same proof works if you define the analogous left-handed group and want to show that left-handed groups are also equivalent to groups.
 Thus, there is no distinction between groups and their left or right counterparts.
-While we technically gave an alternative definition of groups, this is
+While \Cref{defn:rh-grp} is different to \Cref{defn:grp}, morally it doesn't feel that different.
 Can we redefine groups in more interesting ways?
 It turns out you can!
-I will show you how groups can be defined in terms of equations (even a single equation), in terms of a new operation, and even in terms of abstract higher-math nonsense.
+I will show you how groups can be defined in terms of equations (even a single equation), in terms of a new operation, and even in terms of literal abstract nonsense.
 
 \subsection*{Axioms are Equations}
 
 One major motivation of studying group theory is studying algebraic equations.
 Following this motivation, we can formulate groups as satisfying certain equations.
-This result is not from anywhere in particular and is sort of a folklore result.
+This result is not from anywhere in particular and is sort of a \href{https://en.wikipedia.org/wiki/Mathematical_folklore}{folklore} result.
 \begin{defn}\label{defn:eq-grp}
   An \emph{equational group} is a set $E$ with elements satisfying the following axioms:
   \begin{enumerate}
@@ -117,17 +119,18 @@ This result is not from anywhere in particular and is sort of a folklore result.
 \begin{proof}
   Consider a group $G$.
   By the definition of product in a group, $G$ satisfies the axiom E-Product.
-  Similarly, multiplication in a group $G$ is associative and so $G$ satisgies the axiom E-Assocativity.
+  Similarly, multiplication in a group $G$ is associative and so $G$ satisfies the axiom E-Associativity.
   Finally, let $x, y \in G$.
   Then $a = x^{-1}y$ and $b = yx^{-1}$, both of which exist since $x$ and $y$ exist, shows that $G$ satisfies the E-Solution.
   Thus groups are also equational groups.
 
   Now let $E$ be an equational group.
-  Note that the defintion of equational group does not explicitly define an operation like in the definition of group (\Cref{defn:grp}).
+  Note that the definition of equational group does not explicitly define an operation like in the definition of group (\Cref{defn:grp}).
   We will give $E$ an operation using axiom E-Product to define $x \cdot y = xy$ for all $x, y \in E$.
-  This product satisfies associativity of a group since we have the axiom E-Associativity.
+  This is sufficient since E-Product not only says $xy$ exists, but is unique meaning our operation is a well-defined function.
+  This product satisfies the axiom Associativity of a group since we have the axiom E-Associativity.
 
-  We want to show that certain elements, identies and inverses, exist.
+  We want to show that certain elements, identities and inverses, exist.
   These elements satisfy certain equations as defined, so we should use the axiom E-Solution.
   To show that the identity element exists, let $x, y \in E$.
   Then by E-Solution, there exists left and right identity elements $a$ and $b$ such that $xa = x$ and $by = y$.
@@ -153,7 +156,7 @@ This result is not from anywhere in particular and is sort of a folklore result.
 
 \subsection*{\ldots is Multiplication is Division is Multiplication is Division is \ldots}
 
-Typically, the definition of the binary operations $\cdot\colon G \times G \to G$ for a group is thought of in a multiplicative manner: combine two elements $x$ and $y$ to get a new one $xy$.
+Typically, the definition of the binary operation $\cdot\colon G \times G \to G$ for a group is thought of in a multiplicative manner: combine two elements $x$ and $y$ to get a new one $xy$.
 But can we define groups a divisive manner: tearing $y$ off of $x$ and getting an element $z$ representing whatever is leftover?
 Since we have notions of both multiplication and inversion in our normal definition (\Cref{defn:grp}) of a group, we can indeed do this.
 I found this definition during my research for this post from this \href{https://mathoverflow.net/questions/277938/wieners-axiomatization-of-the-group-law-based-on-division}{MathOverflow} post.
@@ -205,8 +208,8 @@ An ever-so-slightly shorter proof would have been proving directly that division
 \subsection*{One Law to Rule Them All}
 
 There is a way to combine ideas from the previous two notions and use a single equation to define what a group is using division.
-This is due to \textbf{Citation Later}.
-However, I will build off of an easier to understand exposition due to \textbf{Citation Later}.
+This is due to Graham Higman and B.H. Neumann in their paper \href{https://doi.org/10.5486/pmd.1952.2.3-4.10}{\textit{Groups as groupoids with one law}}.
+However, I will build off of an easier to understand exposition from Neumann's paper \href{https://doi.org/10.1017/S0004972700006912}{\textit{Another Single Law for Groups}}.
 First a primer on \href{https://en.wikipedia.org/wiki/Reverse_Polish_notation}{\emph{reverse Polish notation}}.
 This notation is common in the early study of these axiomatic systems, and so I will use it here.
 It is a way of writing functions and their inputs without parentheses.
@@ -226,7 +229,7 @@ Verify for yourself that the following identities hold.
 It will be easier to see if you notice that $e = x x \rho$ and use some parentheses.
 
 Now imagine a set $G$ with the operation right division $\rho$, outside of all context of inversion and multiplication.
-Then we have the following theorem from \textbf{Citation Needed}:
+Then we have the following theorem which is the main result from Graham Higman and B.H. Neumann's work:
 \begin{theorem}
   A set $G$ with right division $\rho$ satisfying the following for all $x, y, z \in G$ is a group:
   \[
@@ -252,12 +255,12 @@ Formally, little other structures exists:
 This definition is somewhat reminiscent of a group!
 For example, the proof that the identity morphism in a category is unique for each object is very much the same as the proof that the identity in a group is unique.
 Consider a group $G$ and an element $x \in G$.
-Then we have a morphism of groups, also known as a group homomorphism, called left multiplication by $x$:
+Then we have a group homomorphism called left multiplication by $x$:
 \begin{align*}
   L_{x}\colon G &\to G \\
               g &\mapsto xg
 \end{align*}
-Right multiplication is defined in the way you expect.
+Right multiplication by $x$ is defined in the way you expect.
 
 This allows us to view a single group in a category-theoretic manner.
 Fix your favorite group $G$.
