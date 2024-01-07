@@ -120,6 +120,8 @@ def gen_algos(gen_dir, post):
 def clean_pdf(post):
     print(maybe(f"Cleaning up pdf files for {post}"))
     shutil.rmtree(f"posts/{post}/temp/")
+    if os.path.exists(f"posts/{post}/.auctex.auto/"):
+        shutil.rmtree(f"posts/{post}/.auctex.auto/")
     print(good(f"Did clean up for {post}"))
 
 
@@ -148,11 +150,12 @@ def gen_pdf(gen_dir, post):
 
     # TODO better error checking
     if not os.path.exists("temp/main.pdf"):
-        raise RuntimeError(warn("temp/main.pdf was not built successfully"))
-    print(good("Successfully generated temp/main.pdf"))
+        raise RuntimeError(warn(f"posts/{post}/temp/main.pdf was not built successfully"))
 
     # TODO: don't change directories
     os.chdir("../..")
+
+    print(good(f"Successfully generated posts/{post}/temp/main.pdf"))
 
 
 def clean_post(post):
