@@ -314,22 +314,29 @@ def fresh(gen_dir):
     if os.path.exists(gen_dir):
         print(maybe("Cleaning old generated directory"))
 
-        print(maybe("Removing .html files"))
         html = [
             html_file[:-5]
             for html_file in next(os.walk(f"{gen_dir}"))[2]
             if html_file.endswith(".html")
         ]
-        for html_file in html:
-            os.remove(f"{gen_dir}/{html_file}.html")
+        if len(html) > 0:
+            print(maybe("Removing .html files"))
+            for html_file in html:
+                os.remove(f"{gen_dir}/{html_file}.html")
 
-        print(maybe("Removing .svg file"))
-        os.remove(f"{gen_dir}/symbol-defs.svg")
+        if os.path.exists(f"{gen_dir}/symbol-defs.svg"):
+            print(maybe("Removing .svg file"))
+            os.remove(f"{gen_dir}/symbol-defs.svg")
 
-        print(maybe("Removing folders"))
-        shutil.rmtree(f"{gen_dir}/js/")
-        shutil.rmtree(f"{gen_dir}/posts/")
-        shutil.rmtree(f"{gen_dir}/styles/")
+        if os.path.exists(f"{gen_dir}/js/"):
+            print(maybe("Removing generated js/"))
+            shutil.rmtree(f"{gen_dir}/js/")
+        if os.path.exists(f"{gen_dir}/posts/"):
+            print(maybe("Removing generated posts/"))
+            shutil.rmtree(f"{gen_dir}/posts/")
+        if os.path.exists(f"{gen_dir}/styles/"):
+            print(maybe("Removing generated styles/"))
+            shutil.rmtree(f"{gen_dir}/styles/")
 
         print(good("Cleaned old generated directory"))
 
