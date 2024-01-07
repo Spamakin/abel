@@ -4,6 +4,10 @@
 \input{style}
 
 \title{A Group by Any Other Name}
+\ifplastex
+\else
+  \author{Anakin Dey}
+\fi
 \date{2024--01--01}
 
 \begin{document}
@@ -291,5 +295,11 @@ If we let our single object be $\ob(\textbf{S}_{n}) = \left\{~[n]~\right\} = \le
 If you know a little algebraic topology, then you can also construct the fundamental group of a topological space $X$ with a fixed base point $x \in X$ by considering your morphisms as the classes of loops $x \to x$.
 Groupoids in general are cool objects which nicely generalize properties of groups, but perhaps I'll discuss that another day.
 
+\noindent\rule{\textwidth}{1pt}
+\ifplastex
+  {\small View this as a \href{posts/other_name.pdf}{PDF}.}
+\else
+  {\small View this as a \href{posts/other_name.html}{webpage}.}
+\fi
 
 \end{document}
