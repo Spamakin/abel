@@ -151,7 +151,7 @@ This result is not from anywhere in particular and is sort of a \href{https://en
   \]
   Thus, left and right inverses for each element in $E$ exist and are equivalent yielding that every element in $E$ has an inverse $x^{-1} = a = b$.
   Again the intuition here is that $x^{-1} x x^{-1} = x$ by grouping with parentheses either the left two elements or the right two elements.
-  Overall we have that groups are equivalent to equational groups.
+  Overall we have that groups are equivalent to equational groups.\ \qed
 \end{proof}
 
 \subsection*{\ldots is Multiplication is Division is Multiplication is Division is \ldots}
@@ -284,5 +284,12 @@ Let us take the definition of a category (\Cref{defn:cat}) and add the requireme
   A category $\textbf{G}$ where for every morphism $f\colon A \to B$, there exists a morphism $f^{-1}\colon B \to A$ such that $f^{-1} \circ f = \id_{A}$ and $f \circ f^{-1} = \id_{B}$ is called a groupoid.
 \end{defn}
 Above we have defined a group as a groupoid with one object.
+
+In fact, we can use this to construct groups, rather than just identifying groups as groupoids.
+Lets construct a new groupoid $\textbf{S}_{n}$.
+If we let our single object be $\ob(\textbf{S}_{n}) = \left\{~[n]~\right\} = \left\{~\{1, \ldots, n\}~\right\}$ and let $\hom(\textbf{S}_{n})$ be all possible permutation of $[n]$ then we have constructed the symmetric group on $n$ elements, $S_{n}$, as a groupoid.
+If you know a little algebraic topology, then you can also construct the fundamental group of a topological space $X$ with a fixed base point $x \in X$ by considering your morphisms as the classes of loops $x \to x$.
+Groupoids in general are cool objects which nicely generalize properties of groups, but perhaps I'll discuss that another day.
+
 
 \end{document}
