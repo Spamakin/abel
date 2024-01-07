@@ -66,6 +66,7 @@ def gen_algos(gen_dir, post):
         print(maybe(f"Making temporary directory for algo {algo_name} generation"))
         os.mkdir("temp")
 
+        target = f"{algo_name}.tex"
         print(maybe(f"Running Latexmk with target {target} and the following args:"))
         args = [
             "-pdf",
@@ -75,7 +76,6 @@ def gen_algos(gen_dir, post):
         for arg in args:
             print(f"    {arg}")
             latexmk_args += arg + " "
-        target = f"{algo_name}.tex"
         cmd = "latexmk" + latexmk_args + target
         os.system(cmd)
         if not os.path.exists(f"temp/{algo_name}.pdf"):
@@ -258,11 +258,9 @@ def build_main(root_file, gen_dir):
     fix_title_front(gen_dir, "About", "About")
     fix_title_front(gen_dir, "All-Posts", "All Posts")
 
-
     # TODO: These should be automatically copied...
     print(maybe(f"Copying template files to {gen_dir}/"))
-    templates = ["symbol-defs.svg"]
-    shutil.copy(f"template/commgrp/symbol-defs.svg", f"{gen_dir}/symbol-defs.svg")
+    shutil.copy("template/commgrp/symbol-defs.svg", f"{gen_dir}/symbol-defs.svg")
 
     if not os.path.exists(f"{gen_dir}/js/"):
         raise RuntimeError(warn(f"No js/ folder in {gen_dir}"))
@@ -279,7 +277,11 @@ def fresh(gen_dir):
         print(maybe("Cleaning old generated directory"))
 
         print(maybe("Removing .html files"))
-        html = [html_file[:-5] for html_file in next(os.walk(f"{gen_dir}"))[2] if html_file.endswith(".html")]
+        html = [
+            html_file[:-5]
+            for html_file in next(os.walk(f"{gen_dir}"))[2]
+            if html_file.endswith(".html")
+        ]
         for html_file in html:
             os.remove(f"{gen_dir}/{html_file}.html")
 
