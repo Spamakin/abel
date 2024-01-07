@@ -120,9 +120,9 @@ def gen_algos(gen_dir, post):
 def clean_pdf(post):
     print(maybe(f"Cleaning up pdf files for {post}"))
     shutil.rmtree(f"posts/{post}/temp/")
-    if os.path.exists(f"posts/{post}/.auctex.auto/"):
-        shutil.rmtree(f"posts/{post}/.auctex.auto/")
-    print(good(f"Did clean up for {post}"))
+    if os.path.exists(f"posts/{post}/.auctex-auto/"):
+        shutil.rmtree(f"posts/{post}/.auctex-auto/")
+    print(good(f"Did clean up for {post} pdfs"))
 
 
 def check_post(post):
