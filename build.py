@@ -195,7 +195,7 @@ def gen_post(gen_dir, post):
         with open(f"posts/{post}/main/{post}.html", "r") as content:
             for line in content:
                 # Fix style sheets as they live in one more directory above
-                if "rel=\"stylesheet\"" in line:
+                if 'rel="stylesheet"' in line:
                     rep = line.replace("styles/", "../styles/")
                     curr_post.write(rep)
                 elif line[0:7] == "<title>":
@@ -205,7 +205,7 @@ def gen_post(gen_dir, post):
                     curr_post.write(line)
                     header = [
                         "<header>\n",
-                        "<h1 id=\"doc_title\"><a href=\"../index.html\">commutative.group</a></h1>\n",
+                        '<h1 id="doc_title"><a href="../index.html">commutative.group</a></h1>\n',
                         "</header>\n",
                         "\n",
                     ]
@@ -214,9 +214,9 @@ def gen_post(gen_dir, post):
                 elif line == "</body>\n":
                     scripts = [
                         "\n",
-                        "<script type=\"text/javascript\" src=\"../js/jquery.min.js\"></script>\n",
-                        "<script type=\"text/javascript\" src=\"../js/plastex.js\"></script>\n",
-                        "<script type=\"text/javascript\" src=\"../js/svgxuse.js\"></script>\n",
+                        '<script type="text/javascript" src="../js/jquery.min.js"></script>\n',
+                        '<script type="text/javascript" src="../js/plastex.js"></script>\n',
+                        '<script type="text/javascript" src="../js/svgxuse.js"></script>\n',
                     ]
                     for script_line in scripts:
                         curr_post.write(script_line)
@@ -311,17 +311,18 @@ def build_main(root_file, gen_dir):
 
     # TODO: These should be automatically copied...
     print(maybe(f"Copying template files to {gen_dir}/"))
-    shutil.copy("template/commgrp/symbol-defs.svg", f"{gen_dir}/symbol-defs.svg")
     if not os.path.exists(f"{gen_dir}/styles/"):
         raise RuntimeError(warn(f"No styles/ folder in {gen_dir}"))
-    pkg_css_files = ["amsthm"]
-    for pkg_css in pkg_css_files:
-        shutil.copy(f"template/packages/{pkg_css}.css", f"{gen_dir}/styles/{pkg_css}.js")
+    else:
+        pkg_css_files = ["amsthm"]
+        for pkg_css in pkg_css_files:
+            shutil.copy(f"template/packages/{pkg_css}.css", f"{gen_dir}/styles/{pkg_css}.css")
     if not os.path.exists(f"{gen_dir}/js/"):
         raise RuntimeError(warn(f"No js/ folder in {gen_dir}"))
-    js = ["jquery.min", "plastex", "svgxuse"]
-    for js_file in js:
-        shutil.copy(f"template/commgrp/js/{js_file}.js", f"{gen_dir}/js/{js_file}.js")
+    else:
+        js = ["jquery.min", "plastex", "svgxuse"]
+        for js_file in js:
+            shutil.copy(f"template/commgrp/js/{js_file}.js", f"{gen_dir}/js/{js_file}.js")
     print(good("Copied template files"))
 
     print(good("Built Main Site"))
@@ -340,10 +341,6 @@ def fresh(gen_dir):
             print(maybe("Removing .html files"))
             for html_file in html:
                 os.remove(f"{gen_dir}/{html_file}.html")
-
-        if os.path.exists(f"{gen_dir}/symbol-defs.svg"):
-            print(maybe("Removing .svg file"))
-            os.remove(f"{gen_dir}/symbol-defs.svg")
 
         if os.path.exists(f"{gen_dir}/js/"):
             print(maybe("Removing generated js/"))
@@ -379,24 +376,36 @@ def check_main(root_file):
 
         if not os.path.exists("template/commgrp/"):
             raise RuntimeError(warn("commgrp/ does not exist in template/"))
-        # TODO: These should be automatically copied...
-        templates = ["default-layout.jinja2", "document-layout.jinja2", "symbol-defs.svg"]
-        print(maybe("Checking for the following template files in template/commgrp:"))
-        for temp in templates:
-            print(f"    {temp}")
-        for temp in templates:
-            if not os.path.exists(f"template/commgrp/{temp}"):
-                raise RuntimeError(warn(f"{temp} does not exist in template/commgrp/"))
+        else:
+            if not os.path.exists("template/commgrp/js/"):
+                raise RuntimeError(warn("commgrp/js/ does not exist in template/commgrp"))
+            js = ["jquery.min", "plastex", "svgxuse"]
+            print(maybe("Checking for the following .js files in template/commgrp/js:"))
+            for js_file in js:
+                print(f"    {js_file}.js")
+            for js_file in js:
+                if not os.path.exists(f"template/commgrp/js/{js_file}.js"):
+                    raise RuntimeError(warn(f"{js_file}.js does not exist in template/commgrp/js/"))
 
-        if not os.path.exists("template/commgrp/js/"):
-            raise RuntimeError(warn("commgrp/js/ does not exist in template/"))
-        js = ["jquery.min", "plastex", "svgxuse"]
-        print(maybe("Checking for the following .js files in template/commgrp/js:"))
-        for js_file in js:
-            print(f"    {js_file}.js")
-        for js_file in js:
-            if not os.path.exists(f"template/commgrp/js/{js_file}.js"):
-                raise RuntimeError(warn(f"{js_file}.js does not exist in template/commgrp/js/"))
+        if not os.path.exists("template/algos/"):
+            raise RuntimeError(warn("algos/ does not exist in template/"))
+        stys = ["algo", "style", "ntabbing"]
+        print(maybe("Checking for the following .sty files for algos:"))
+        for sty in stys:
+            print(f"    {sty}.sty")
+        for sty in stys:
+            if not os.path.exists(f"template/algos/{sty}.sty"):
+                raise RuntimeError(warn(f"{sty}.sty does not exist in template/algos/"))
+
+        if not os.path.exists("template/packages/"):
+            raise RuntimeError(warn("packages/ does not exist in template/"))
+        stylesheets = ["amsthm"]
+        print(maybe("Checking for the following .css files in template/commgrp/packages:"))
+        for css in stylesheets:
+            print(f"    {css}.sty")
+        for css in stylesheets:
+            if not os.path.exists(f"template/packages/{css}.css"):
+                raise RuntimeError(warn(f"{css}.css does not exist in template/packages/"))
 
     print(good("Found all necessary files"))
 
