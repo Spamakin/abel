@@ -174,7 +174,10 @@ def gen_post(gen_dir, post):
 
     # Render post fragment
     args = [
-        "--theme=fragment",
+        "--extra-templates=template/commgrp",
+        "--theme=commgrp",
+        "--extra-css posts-commgroup.css",
+        "--no-display-toc",
         "--split-level=-1",
         f"--dir=posts/{post}/main/",
         f"--image-filenames='{post}-images/$num'",
@@ -189,21 +192,34 @@ def gen_post(gen_dir, post):
 
     # Assemble template
     with open(f"posts/{post}/{post}-templated.html", "w") as curr_post:
-        with open("template/posts-start.html", "r") as start:
-            for line in start:
-                if line == "</head>\n":
-                    curr_post.write(f"<title>{meta['title']}</title>")
-                curr_post.write(line)
-        curr_post.write("\n")
-
         with open(f"posts/{post}/main/{post}.html", "r") as content:
             for line in content:
-                curr_post.write(line)
-        curr_post.write("\n")
-
-        with open("template/posts-end.html", "r") as end:
-            for line in end:
-                curr_post.write(line)
+                # Fix style sheets as they live in one more directory above
+                if "rel=\"stylesheet\"" in line:
+                    rep = line.replace("styles/", "../styles/")
+                    curr_post.write(rep)
+                elif line == "<body>\n":
+                    curr_post.write(line)
+                    header = [
+                        "<header>\n",
+                        "<h1 id=\"doc_title\"><a href=\"../index.html\">commutative.group</a></h1>\n",
+                        "</header>\n",
+                        "\n",
+                    ]
+                    for head_line in header:
+                        curr_post.write(head_line)
+                elif line == "</body>\n":
+                    scripts = [
+                        "\n",
+                        "<script type=\"text/javascript\" src=\"../js/jquery.min.js\"></script>\n",
+                        "<script type=\"text/javascript\" src=\"../js/plastex.js\"></script>\n",
+                        "<script type=\"text/javascript\" src=\"../js/svgxuse.js\"></script>\n",
+                    ]
+                    for script_line in scripts:
+                        curr_post.write(script_line)
+                    curr_post.write(line)
+                else:
+                    curr_post.write(line)
         curr_post.write("\n")
 
     print(good(f"Wrote {post} to full file"))
@@ -219,17 +235,8 @@ def posts(gen_dir):
     # The only required file is main.tex, the post
     # Any other tex files, as far as this function is concerned, do not exist
 
-    # template/ contains three files
-    # posts-commgroup.css
-    #   This is the style sheet for every post, to maintain a unified style
-    # posts-start.html
-    #   The first part of the blog template
-    # posts-end.html
-    #   The last part of the blog template
-    # Upon rendering a post into a fragment, we concatenate the results
-
     # Copy posts-commgroup.css into main/posts/
-    shutil.copy("template/posts-commgroup.css", f"{gen_dir}/styles/")
+    shutil.copy("posts-commgroup.css", f"{gen_dir}/styles/")
     print(good("Copied posts-commgroup.css"))
 
     # Render each post
@@ -302,7 +309,11 @@ def build_main(root_file, gen_dir):
     # TODO: These should be automatically copied...
     print(maybe(f"Copying template files to {gen_dir}/"))
     shutil.copy("template/commgrp/symbol-defs.svg", f"{gen_dir}/symbol-defs.svg")
-
+    if not os.path.exists(f"{gen_dir}/styles/"):
+        raise RuntimeError(warn(f"No styles/ folder in {gen_dir}"))
+    pkg_css_files = ["amsthm"]
+    for pkg_css in pkg_css_files:
+        shutil.copy(f"template/packages/{pkg_css}.css", f"{gen_dir}/styles/{pkg_css}.js")
     if not os.path.exists(f"{gen_dir}/js/"):
         raise RuntimeError(warn(f"No js/ folder in {gen_dir}"))
     js = ["jquery.min", "plastex", "svgxuse"]
@@ -353,15 +364,6 @@ def check_main(root_file):
     if not os.path.exists("template/"):
         raise RuntimeError(warn("Templates folder templates/ not found"))
     else:
-        post_templates = ["posts-commgroup.css", "posts-start.html", "posts-start.html"]
-        print(maybe("Checking for the following template files for posts:"))
-        for temp in post_templates:
-            print(f"    {temp}")
-        for temp in post_templates:
-            if not os.path.exists(f"template/{temp}"):
-                raise RuntimeError(warn(f"{temp} does not exist in template/"))
-        print(good("Found template files"))
-
         if not os.path.exists("template/algos/"):
             raise RuntimeError(warn("algos/ does not exist in template/"))
         stys = ["algo", "style", "ntabbing"]
