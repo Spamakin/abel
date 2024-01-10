@@ -198,6 +198,9 @@ def gen_post(gen_dir, post):
                 if "rel=\"stylesheet\"" in line:
                     rep = line.replace("styles/", "../styles/")
                     curr_post.write(rep)
+                elif line[0:7] == "<title>":
+                    rep = f"<title>{meta["title"]}</title>"
+                    curr_post.write(rep)
                 elif line == "<body>\n":
                     curr_post.write(line)
                     header = [
