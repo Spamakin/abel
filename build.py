@@ -191,38 +191,39 @@ def gen_post(gen_dir, post):
         meta = json.load(meta_data)
 
     # Assemble template
-    with open(f"posts/{post}/{post}-templated.html", "w") as curr_post:
-        with open(f"posts/{post}/main/{post}.html", "r") as content:
-            for line in content:
-                # Fix style sheets as they live in one more directory above
-                if 'rel="stylesheet"' in line:
-                    rep = line.replace("styles/", "../styles/")
-                    curr_post.write(rep)
-                elif line[0:7] == "<title>":
-                    rep = f"<title>{meta["title"]}</title>"
-                    curr_post.write(rep)
-                elif line == "<body>\n":
-                    curr_post.write(line)
-                    header = [
-                        "<header>\n",
-                        '<h1 id="doc_title"><a href="../index.html">commutative.group</a></h1>\n',
-                        "</header>\n",
-                        "\n",
-                    ]
-                    for head_line in header:
-                        curr_post.write(head_line)
-                elif line == "</body>\n":
-                    scripts = [
-                        "\n",
-                        '<script type="text/javascript" src="../js/jquery.min.js"></script>\n',
-                        '<script type="text/javascript" src="../js/plastex.js"></script>\n',
-                        '<script type="text/javascript" src="../js/svgxuse.js"></script>\n',
-                    ]
-                    for script_line in scripts:
-                        curr_post.write(script_line)
-                    curr_post.write(line)
-                else:
-                    curr_post.write(line)
+    input_html = f"posts/{post}/main/{post}.html"
+    output_html = f"posts/{post}/{post}-templated.html"
+    with open(input_html, "r") as content, open(output_html, "w") as curr_post:
+        for line in content:
+            # Fix style sheets as they live in one more directory above
+            if 'rel="stylesheet"' in line:
+                rep = line.replace("styles/", "../styles/")
+                curr_post.write(rep)
+            elif line[0:7] == "<title>":
+                rep = f"<title>{meta["title"]}</title>"
+                curr_post.write(rep)
+            elif line == "<body>\n":
+                curr_post.write(line)
+                header = [
+                    "<header>\n",
+                    '<h1 id="doc_title"><a href="../index.html">commutative.group</a></h1>\n',
+                    "</header>\n",
+                    "\n",
+                ]
+                for head_line in header:
+                    curr_post.write(head_line)
+            elif line == "</body>\n":
+                scripts = [
+                    "\n",
+                    '<script type="text/javascript" src="../js/jquery.min.js"></script>\n',
+                    '<script type="text/javascript" src="../js/plastex.js"></script>\n',
+                    '<script type="text/javascript" src="../js/svgxuse.js"></script>\n',
+                ]
+                for script_line in scripts:
+                    curr_post.write(script_line)
+                curr_post.write(line)
+            else:
+                curr_post.write(line)
         curr_post.write("\n")
 
     print(good(f"Wrote {post} to full file"))
