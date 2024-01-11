@@ -39,7 +39,9 @@ def run_plastex(args, target):
         print(f"    {arg}")
         plastex_args += arg + " "
     cmd = "plastex" + plastex_args + f" -- {target}"
-    os.system(cmd)
+    res = os.system(cmd)
+    if res != 0:
+        raise RuntimeError(warn("Encountered issue with latest plasTeX call"))
 
 
 def run_latexmk(args, target):
@@ -49,7 +51,9 @@ def run_latexmk(args, target):
         print(f"    {arg}")
         latexmk_args += arg + " "
     cmd = "latexmk" + latexmk_args + f"{target}"
-    os.system(cmd)
+    res = os.system(cmd)
+    if res != 0:
+        raise RuntimeError(warn("Encountered issue with latest latexmk call"))
 
 
 def gen_algos(gen_dir, post):
@@ -84,7 +88,6 @@ def gen_algos(gen_dir, post):
         ]
         run_latexmk(args, target)
 
-        # TODO better error checking
         if not os.path.exists(f"temp/{algo_name}.pdf"):
             raise RuntimeError(warn(f"temp/{algo_name}.pdf was not built successfully"))
         print(good(f"Successfully generated temp/{algo_name}.pdf"))
@@ -108,7 +111,6 @@ def gen_algos(gen_dir, post):
         print(good(f"Moved {algo_name}.png to posts/{post}"))
 
         shutil.rmtree(f"posts/{post}/algos/temp")
-        # TODO: remove generated png?
         print(good(f"Cleaned up generated files for algos/{algo_name}"))
 
     stys = ["algo", "style", "ntabbing"]
@@ -148,7 +150,6 @@ def gen_pdf(gen_dir, post):
     ]
     run_latexmk(args, target)
 
-    # TODO better error checking
     if not os.path.exists("temp/main.pdf"):
         raise RuntimeError(warn(f"posts/{post}/temp/main.pdf was not built successfully"))
 
@@ -310,7 +311,6 @@ def build_main(root_file, gen_dir):
     fix_title_front(gen_dir, "About", "About")
     fix_title_front(gen_dir, "All-Posts", "All Posts")
 
-    # TODO: These should be automatically copied...
     print(maybe(f"Copying template files to {gen_dir}/"))
     if not os.path.exists(f"{gen_dir}/styles/"):
         raise RuntimeError(warn(f"No styles/ folder in {gen_dir}"))
